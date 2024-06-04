@@ -1,0 +1,60 @@
+:root {
+  --primary-color: #000F1A;
+  --primary-color-end: #004A80;
+  --secondary-color: #FFCC99;
+  --footer-color: #001E34;
+  --red: #BC4749;
+  --green: #9BC53D;
+  --font-color-dark: black;
+  --font-color-white: #FFF;
+
+}
+
+
+[data-theme="light"] {
+  --primary-color: #9A97F3;
+  --primary-color-end: #1B0223;
+  --secondary-color: #818cab;
+  --font-color: #e1e1ff;
+  --bg-color: #161625;
+  --heading-color: #818cab;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html{
+  background: linear-gradient(var(--primary-color), var(--primary-color-end));
+  font-family: "Inter", sans-serif;
+  min-height: 100%;
+  overflow-x: hidden;
+  position:relative;
+}
+html:before{
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  background: url('textured-paper.png') repeat;
+  opacity: 0.1;
+}
+footer:before{
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  background-image: url('fake-brick.png');
+  background-repeat: repeat;
+  background-size: 15%;
+  opacity: 1;
+}
+p{
+  color:var(--font-color-white);
+}

@@ -1,0 +1,14 @@
+{
+    "name": "NewsPaper",
+    "icons": [
+      {
+        "src": "/src/assets/logo512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ],
+    "start_url": "http://localhost:5173",
+    "display": "standalone",
+    "background_color": "#bfbfbf"
+    
+}  
