@@ -53,7 +53,7 @@ const formattedTime = computed(() => {
     overflow:hidden;
 }
 .seating_plan.maximized{
-    max-height: 900px;
+    max-height: 1920px;
 }
 </style>
 
@@ -72,7 +72,7 @@ const formattedTime = computed(() => {
     transition: all 0.5s;
 }
 .info > p{
-    transition: all 0.5s;
+    transition: all 0.5s ease-out;
 }
 .info > p {
     display:inline-block;

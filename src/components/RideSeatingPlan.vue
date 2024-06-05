@@ -136,7 +136,7 @@ function updateTable(seatplan){
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
-  width: 50vw;
+  width: 75vw;
   margin: auto;
   font-family: "Readex Pro", sans-serif;
   font-size:23px;
@@ -147,15 +147,15 @@ table {
   color: black;
   text-align: center;
   font-weight: bold;
-  font-size:25px;
 }
 
 td,
 th {
   text-align: left;
   padding: 8px;
-  height: calc(50vw/8);
-  width: calc(50vw/8);
+  height: calc(75vw/8);
+  width: calc(75vw/8);
+  font-size: calc(75vw/8 - 5vw);
 }
 
 .seat {
@@ -183,7 +183,7 @@ th {
 <style>
 .legend{
   margin: auto;
-  margin-top:20px;
+  margin-top:30px;
   margin-bottom:20px;
 
   width: 50vw;
@@ -205,5 +205,10 @@ th {
   height: 20px;
   color:white;
   font-size:25px;
+}
+@media only screen and (max-width: 600px) {
+  .legend > div{
+    text-align: center;
+  }
 }
 </style>

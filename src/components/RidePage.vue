@@ -46,6 +46,7 @@ function generate(){
 <style scoped>
 .container{
     text-align: center;
+    overflow:hidden;
 }
 button{
     border-radius: 5px;
@@ -113,5 +114,12 @@ button{
     color: var(--secondary-color);
     position: relative;
     right: 150px;
+}
+@media only screen and (max-width: 600px) {
+  #generate{
+    left: 50%;
+    transform: translateX(-50%);
+    width:85vw;
+  }
 }
 </style>

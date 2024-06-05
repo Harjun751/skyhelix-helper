@@ -53,7 +53,6 @@ let editing = ref(false);
 #main.v-leave-active {
   /* transition: opacity 0.5s ease; */
   transition: all 0.4s;
-  position: absolute;
 }
 
 #main.v-enter-from,

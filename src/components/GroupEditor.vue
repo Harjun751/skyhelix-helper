@@ -7,7 +7,6 @@ const store = useQueueStore();
 let plus_size = ref(Number(props.p));
 let normal = ref(Number(props.n));
 let kids = ref(Number(props.k));
-
 </script>
 
 <template>

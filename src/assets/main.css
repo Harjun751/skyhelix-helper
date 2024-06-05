@@ -58,3 +58,7 @@ footer:before{
 p{
   color:var(--font-color-white);
 }
+body
+{
+  overscroll-behavior-y: contain;
+}
