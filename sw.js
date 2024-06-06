@@ -16,21 +16,21 @@ self.addEventListener('activate', (e) => {
 })
 
 // Call fetch event
-// self.addEventListener('fetch', e => {
-//     e.respondWith(
-//         caches.match(e.request)
-//             .then(res => {
-//                 if (res!=null){
-//                     return res
-//                 } else {
-//                     return fetch(e.request).then(res => {
-//                         const resClone = res.clone();
-//                         caches.open(cacheName).then(
-//                             cache => cache.put(e.request, resClone)
-//                         )
-//                         return res;
-//                     })
-//                 }
-//             })
-//     )
-// })
+self.addEventListener('fetch', e => {
+    e.respondWith(
+        caches.match(e.request)
+            .then(res => {
+                if (res!=null){
+                    return res
+                } else {
+                    return fetch(e.request).then(res => {
+                        const resClone = res.clone();
+                        caches.open(cacheName).then(
+                            cache => cache.put(e.request, resClone)
+                        )
+                        return res;
+                    })
+                }
+            })
+    )
+})
