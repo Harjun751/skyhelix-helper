@@ -221,7 +221,6 @@ export function brute_force_seats(queue){
     let next_groups = get_groups(queue)[0];
     let bruh = structuredClone(next_groups);
     let bestseats = brute_force(next_groups, seats, 0);
-    console.log(bestseats[0]);
     bestseats = bestseats[1]
     allocate_seats(bestseats, bruh)
     return [bestseats, bruh];

@@ -11,7 +11,7 @@ watch (testy, (newval) => {
   updateTable(newval);
 })
 onMounted(() => {
-  console.log(props.seatplan);
+  updateTable(props.seatplan);
 })
 
 function updateTable(seatplan){
