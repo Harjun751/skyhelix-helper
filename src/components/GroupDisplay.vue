@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import GroupEditor from '@/components/GroupEditor.vue'
-const props = defineProps(['plus_size', 'normal', 'kids', 'id', 'number'])
+const props = defineProps(['plus_size', 'normal', 'kids', 'nationality', 'id', 'number'])
 let editing = ref(false);
 </script>
 
@@ -9,7 +9,7 @@ let editing = ref(false);
 <template>
     <div id="grouptainer" :class="{ 'editing': editing }" @click="editing = !editing">
         <div id="header">
-            <p>Group {{ props.number }}</p>
+            <p>Group {{ props.number }} ({{ props.nationality }})</p>
         </div>
         <Transition>
             <div id="main" v-if="!editing">
@@ -28,7 +28,7 @@ let editing = ref(false);
             </div>
             <div id="editor" v-else>
                 <div style="width:280px;margin:auto;" @click.stop>
-                    <GroupEditor @minimize="editing = !editing" :p=plus_size :n=normal :k=kids :id=props.id submit_type=false  />
+                    <GroupEditor @minimize="editing = !editing" :p=plus_size :n=normal :k=kids :nationality=nationality :id=props.id submit_type=false  />
                 </div>
             </div>
         </Transition>
@@ -70,7 +70,7 @@ let editing = ref(false);
     transition: height 0.4s;
 }
 #grouptainer.editing{
-    height:250px;
+    height:280px;
 }
 #header{
     height: 20px;

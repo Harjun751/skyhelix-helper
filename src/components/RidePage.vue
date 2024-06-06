@@ -73,7 +73,7 @@ button{
     text-shadow: 0px 0px 10px;
 }
 .delete{
-    margin: 50px auto 90px auto;
+    margin: 50px auto 180px auto;
     /* color: var(--font-color-white); */
     background-color: var(--red);
     font-size:18px;

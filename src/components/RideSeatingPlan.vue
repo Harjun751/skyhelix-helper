@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, toRef, watch } from 'vue'
+import { onMounted, toRef, watch, computed } from 'vue'
 import { useQueueStore } from '../stores/store'
 
 const props = defineProps(['seatplan', 'number'])
@@ -13,9 +13,22 @@ watch (testy, (newval) => {
 onMounted(() => {
   updateTable(props.seatplan);
 })
-
+const summary = computed(() => {
+  let num_adults = 0;
+  let num_kids = 0;
+  for (let x = 0; x < props.seatplan.length; x++){
+    let crawler = props.seatplan[x];
+    if (crawler.occupied && (crawler.occupant == "" || crawler.occupant == "L")){
+      num_adults+=1;
+    } else if (crawler.occupied && crawler.occupant=="K"){
+      num_kids+=1
+    }
+  }
+  return `${num_adults}A${num_kids}C`
+})
 function updateTable(seatplan){
   var dict = {};
+  var natl = {};
   let auto_incr = 0;
   let table = document.getElementById(props.number);
   for (let x = 0; x < seatplan.length; x++) {
@@ -31,6 +44,7 @@ function updateTable(seatplan){
           groupNumber = auto_incr++;
         }
         dict[groupid] = groupNumber;
+        natl[groupid] = groups[groupNumber].nationality;
       }
       ele.style.backgroundColor = groupColours[groupNumber];
       ele.textContent = seatplan[x].occupant;
@@ -44,7 +58,9 @@ function updateTable(seatplan){
   let snippet = ""
   Object.keys(dict).forEach(function (key) {
     let color = groupColours[dict[key]];
-    snippet += "<div><div class=\"color\" style=\"background-color:"+ color +"\"></div><span class=\"label\">Group "+ (Number(dict[key])+1) +"</span></div>"
+    let nationality = natl[key];
+    console.log("id: " + key)
+    snippet += "<div><div class=\"color\" style=\"background-color:"+ color +"\"></div><span class=\"label\">Group "+ (Number(dict[key])+1) +" (" + nationality + ")</span></div>"
   });
   document.querySelectorAll(".legend[id='" + props.number + "']")[0].innerHTML = snippet;
 }
@@ -130,6 +146,9 @@ function updateTable(seatplan){
   <div class="legend" :id="props.number">
     
   </div>
+  <div class="summary">
+    {{  summary }}
+  </div>
 </template>
 
 <style scoped>
@@ -185,7 +204,6 @@ th {
   margin: auto;
   margin-top:30px;
   margin-bottom:20px;
-
   width: 50vw;
   text-align: left;
 }
@@ -202,13 +220,12 @@ th {
 .legend > div > .label{
   margin-left:20px;
   display: inline-block;
-  height: 20px;
+  height: 18px;
   color:white;
-  font-size:25px;
+  font-size:18px;
 }
-@media only screen and (max-width: 600px) {
-  .legend > div{
-    text-align: center;
-  }
+.summary{
+  font-family: "Readex Pro", sans-serif;  
+  color:white;
 }
 </style>

@@ -20,18 +20,18 @@ export const useQueueStore = defineStore('queue', () => {
     num_in_queue.value = JSON.parse(localStorage.getItem("num_in_queue"));
   }
 
-  function addGroup(plus, normal, kids) {
+  function addGroup(plus, normal, kids, nationality) {
     if (plus == 0 && normal == 0 && kids == 0){
       return;
     }
-    groups.value.push(new Group(plus, normal, kids, id.value++));
+    groups.value.push(new Group(plus, normal, kids, nationality, id.value++));
     num_in_queue.value += (plus + normal + kids);
   }
 
-  function updateGroup(plus, normal, kids, id) {
+  function updateGroup(plus, normal, kids,nationality, id) {
     let n = groups.value.findIndex(x => x.id == id);
     num_in_queue.value -= (groups.value[n].size);
-    groups.value[n] = new Group(plus, normal, kids, id);
+    groups.value[n] = new Group(plus, normal, kids, nationality, id);
     num_in_queue.value += (plus, normal, kids);
   }
 

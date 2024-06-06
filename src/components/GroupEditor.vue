@@ -2,11 +2,12 @@
 import { ref } from 'vue';
 import { useQueueStore } from '../stores/store'
 
-const props = defineProps(['p', 'n', 'k', 'id', 'submit_type'])
+const props = defineProps(['p', 'n', 'k', 'id', 'nationality','submit_type'])
 const store = useQueueStore();
 let plus_size = ref(Number(props.p));
 let normal = ref(Number(props.n));
 let kids = ref(Number(props.k));
+let nationality = ref(props.nationality);
 </script>
 
 <template>
@@ -35,12 +36,34 @@ let kids = ref(Number(props.k));
                 <span class="plus" @click="kids+=1">+</span>
             </span>
         </div>
+        <div class="input_group">
+            <span class="label">Nationality</span>
+            <select v-model="nationality">
+                <option>Australia</option>
+                <option>China</option>
+                <option>Europe</option>
+                <option>Hong Kong</option>
+                <option>India</option>
+                <option>Indonesia</option>
+                <option>Japan</option>
+                <option>Korea</option>
+                <option>Malaysia</option>
+                <option>Phillipines</option>
+                <option>Singapore</option>
+                <option>Taiwan</option>
+                <option>Myanmar</option>
+                <option>Thailand</option>
+                <option>UAE</option>
+                <option>USA</option>
+                <option>Vietnam</option>
+            </select>
+        </div>
         <div class="submit" v-if="submit_type=='true'">
-            <input id="submit" @click="store.addGroup(plus_size, normal, kids);plus_size=0;normal=0;kids=0;" type="submit" value="Add"/>
+            <input id="submit" @click="store.addGroup(plus_size, normal, kids, nationality);plus_size=0;normal=0;kids=0;" type="submit" value="Add"/>
         </div>
         <div class="submit" v-else>
             <input id="delete" @click="store.deleteGroup(props.id)" type="submit" value="Delete"/>
-            <input id="update" @click="store.updateGroup(plus_size, normal, kids, props.id);$emit('minimize')" type="submit" value="Update"/>
+            <input id="update" @click="store.updateGroup(plus_size, normal, kids, nationality, props.id);$emit('minimize')" type="submit" value="Update"/>
         </div>
     </div>
 </template>
@@ -103,6 +126,10 @@ let kids = ref(Number(props.k));
 #delete{
     background-color: var(--red);
     margin-right:15px;
+}
+.input_group > select{
+    width:113.61px;
+    font-family: "Readex Pro", sans-serif;
 }
 @keyframes shake {
   0% { transform: translate(1px, 1px) rotate(0deg); }

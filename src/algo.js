@@ -21,10 +21,11 @@ function get_groups(queue){
 
 
 export class Group {
-    constructor(plus_size, normal, kids, id){
+    constructor(plus_size, normal, kids, nationality, id){
         this.plus_size = plus_size;
         this.normal = normal;
         this.kids = kids;
+        this.nationality = nationality;
         this.id = id;
         this.size = plus_size + normal + kids;
     }
