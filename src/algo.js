@@ -48,6 +48,17 @@ function get_seat_variations(group, seats){
     let occupied_count = 0;
     let long_count = 0;
     let partitions_count = 0;
+    let best_partitions_count = 0;
+    if (group.size <= 4){
+        best_partitions_count = 0;
+    } else if (group.size <= 8) {
+        best_partitions_count = 1;
+    } else if (group.size <= 12){
+        best_partitions_count = 2;
+    } else if (group.size <= 16){
+        best_partitions_count = 3;
+    }
+
     if (end.occupied){
         occupied_count+=1;
     }
@@ -59,6 +70,9 @@ function get_seat_variations(group, seats){
             partitions_count+=1;
         }
         end = end.next;
+        if (end.long){
+            long_count+=1;
+        }
         if (end.occupied){
             occupied_count+=1;
         }
@@ -101,15 +115,19 @@ function get_seat_variations(group, seats){
             crawler.groupid = group.id;
             crawler = crawler.next
         }
-
         // calculate group score for this variation
         let score = 16;
-        // the more seatbelts the better - no bonus score for going over, though.
         if (long_count <= group.plus_size){
+            // the more longer seatbelts the better - no bonus score for going over, though.
             score += long_count
         }
-        if (partitions_count==0){
-            score += 1
+        if (long_count > group.plus_size){
+            // penalty for using more longer seatbelts than required
+            score -= (long_count-group.plus_size)
+        }
+        if (partitions_count<=best_partitions_count){
+            // add score to partitions based on best partitions.. should be 1 all the time anyway...
+            score += (best_partitions_count-partitions_count + 1);
         }
 
         variations.push([new_seats, score]);
@@ -189,7 +207,7 @@ function brute_force(queue, variation, score){
             // Compare results with current best score
             let new_score = results[0];
             // accept variation if it's better
-            if (new_score >= best_score){
+            if (new_score > best_score){
                 best_score = new_score;
                 best_variation = results[1];
             }
@@ -202,7 +220,9 @@ export function brute_force_seats(queue){
     let seats = getSeats();
     let next_groups = get_groups(queue)[0];
     let bruh = structuredClone(next_groups);
-    let bestseats = brute_force(next_groups, seats, 0)[1];
+    let bestseats = brute_force(next_groups, seats, 0);
+    console.log(bestseats[0]);
+    bestseats = bestseats[1]
     allocate_seats(bestseats, bruh)
     return [bestseats, bruh];
 }
@@ -230,7 +250,7 @@ function allocate_seats(seats, groups){
                 group.plus_size -= 1;
                 previous_same_group_and_adult = true;
             } else {
-                if (group.kids > 0  && previous_same_group_and_adult){
+                if (group.kids > 0  && previous_same_group_and_adult || (group.kids > 0 && group.plus_size==0 && group.normal == 0)){
                     crawler.occupant = "K"
                     group.kids -= 1;
                     previous_same_group_and_adult = false;
@@ -241,7 +261,7 @@ function allocate_seats(seats, groups){
                 }
             }
         } else {
-            if (group.kids > 0  && previous_same_group_and_adult || (group.plus_size==0 && group.normal == 0)){
+            if (group.kids > 0  && previous_same_group_and_adult || (group.kids > 0 && group.plus_size==0 && group.normal == 0)){
                 crawler.occupant = "K"
                 group.kids -= 1;
                 previous_same_group_and_adult = false;
