@@ -155,11 +155,9 @@ function updateTable(seatplan){
 
 <style scoped>
 table {
-  font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 75vw;
   margin: auto;
-  font-family: "Readex Pro", sans-serif;
   font-size:23px;
   color: white;
 }
@@ -201,11 +199,9 @@ th {
   text-align: right;
 }
 .summary{
-  font-family: "Readex Pro", sans-serif;  
   color:white;
 }
 .info{
-  font-family: "Readex Pro", sans-serif;
   color:white;
   margin-top:30px;
 }
@@ -217,7 +213,6 @@ th {
   margin-bottom:20px;
   width: 75vw;
   text-align: left;
-  font-family: "Readex Pro", sans-serif;
 }
 .legend > div{
   margin-top:5px;

@@ -62,6 +62,7 @@ let editing = ref(false);
 }
 
 #grouptainer{
+    font-family: "Inter", sans-serif;
     border: 1px solid var(--secondary-color);
     border-radius: 13px;
     height: 116px;
@@ -75,7 +76,6 @@ let editing = ref(false);
 #header{
     height: 20px;
     font-size: 15px;
-    font-family: Arial, Helvetica, sans-serif;
     text-align: center;
 }
 #header p{
