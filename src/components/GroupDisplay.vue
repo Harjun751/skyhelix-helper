@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import GroupEditor from '@/components/GroupEditor.vue'
-const props = defineProps(['plus_size', 'normal', 'kids', 'nationality', 'id', 'number'])
+const props = defineProps(['group', 'number'])
 let editing = ref(false);
 </script>
 
@@ -9,26 +9,26 @@ let editing = ref(false);
 <template>
     <div id="grouptainer" :class="{ 'editing': editing }" @click="editing = !editing">
         <div id="header">
-            <p>Group {{ props.number }} ({{ props.nationality }})</p>
+            <p>Group {{ props.number }} ({{ props.group.nationality }})</p>
         </div>
         <Transition>
             <div id="main" v-if="!editing">
                 <div id="plus" class="hero">
                     <span>Plus-Sized</span>
-                    <p>{{ plus_size }}</p>
+                    <p>{{ group.plus_size }}</p>
                 </div>
                 <div id="normal" class="hero">
                     <span>Normal</span>
-                    <p>{{ normal }}</p>
+                    <p>{{ group.normal }}</p>
                 </div>
                 <div id="child" class="hero">
                     <span>Child</span>
-                    <p>{{ kids }}</p>
+                    <p>{{ group.kids }}</p>
                 </div>
             </div>
             <div id="editor" v-else>
                 <div style="width:280px;margin:auto;" @click.stop>
-                    <GroupEditor @minimize="editing = !editing" :p=plus_size :n=normal :k=kids :nationality=nationality :id=props.id submit_type=false  />
+                    <GroupEditor @minimize="editing = !editing" :p=group.plus_size :n=group.normal :k=group.kids :nationality=group.nationality :id=group.id submit_type=false  />
                 </div>
             </div>
         </Transition>

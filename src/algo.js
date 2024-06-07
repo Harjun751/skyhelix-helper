@@ -43,6 +43,16 @@ class Seat {
     }
 }
 
+export class Ride{
+    constructor(number, state, liftoff, groups, seatplan){
+        this.number = number;
+        this.state = state;
+        this.liftoff = liftoff;
+        this.groups = groups;
+        this.seatplan = seatplan;
+    }
+}
+
 function get_seat_variations(group, seats){
     let start = seats[0];
     let end = start;
@@ -251,7 +261,7 @@ function allocate_seats(seats, groups){
                 previous_same_group_and_adult = true;
             } else {
                 if (group.kids > 0  && previous_same_group_and_adult || (group.kids > 0 && group.plus_size==0 && group.normal == 0)){
-                    crawler.occupant = "K"
+                    crawler.occupant = "C"
                     group.kids -= 1;
                     previous_same_group_and_adult = false;
                 } else {
@@ -262,7 +272,7 @@ function allocate_seats(seats, groups){
             }
         } else {
             if (group.kids > 0  && previous_same_group_and_adult || (group.kids > 0 && group.plus_size==0 && group.normal == 0)){
-                crawler.occupant = "K"
+                crawler.occupant = "C"
                 group.kids -= 1;
                 previous_same_group_and_adult = false;
             } else if (group.normal > 0) {

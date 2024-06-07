@@ -2,22 +2,22 @@
 import { onMounted, toRef, watch, computed } from 'vue'
 import { useQueueStore } from '../stores/store'
 
-const props = defineProps(['seatplan', 'number'])
+const props = defineProps(['ride', 'number'])
 const groupColours = ["#00A2E8", "#FFF200", "#FF7F27", "#B97A57", "red", "black", "green", "blue"];
 const store = useQueueStore();
 const groups = store.groups;
-const testy = toRef(props, 'seatplan');
+const testy = toRef(props, 'ride');
 watch (testy, (newval) => {
-  updateTable(newval);
+  updateTable(newval.seatplan);
 })
 onMounted(() => {
-  updateTable(props.seatplan);
+  updateTable(props.ride.seatplan);
 })
 const summary = computed(() => {
   let num_adults = 0;
   let num_kids = 0;
-  for (let x = 0; x < props.seatplan.length; x++){
-    let crawler = props.seatplan[x];
+  for (let x = 0; x < props.ride.seatplan.length; x++){
+    let crawler = props.ride.seatplan[x];
     if (crawler.occupied && (crawler.occupant == "" || crawler.occupant == "L")){
       num_adults+=1;
     } else if (crawler.occupied && crawler.occupant=="K"){
@@ -40,17 +40,18 @@ function updateTable(seatplan){
       let groupNumber = dict[groupid];
       if (groupNumber == null) {
         groupNumber = groups.findIndex(x => x.id == groupid);
+        let groupNationality = props.ride.groups.find(x => x.id == groupid).nationality;
+        natl[groupid] = groupNationality;
         if (groupNumber == -1){
           groupNumber = auto_incr++;
         }
         dict[groupid] = groupNumber;
-        natl[groupid] = groups[groupNumber].nationality;
       }
       ele.style.backgroundColor = groupColours[groupNumber];
       ele.textContent = seatplan[x].occupant;
     } else {
-      let number = seatplan[x].number;
-      let ele = table.getElementsByClassName(String(number))[0];
+      let seatnum = seatplan[x].number;
+      let ele = table.getElementsByClassName(String(seatnum))[0];
       ele.style.backgroundColor = "#D9D9D9";
       ele.textContent = "";
     }
@@ -59,7 +60,6 @@ function updateTable(seatplan){
   Object.keys(dict).forEach(function (key) {
     let color = groupColours[dict[key]];
     let nationality = natl[key];
-    console.log("id: " + key)
     snippet += "<div><div class=\"color\" style=\"background-color:"+ color +"\"></div><span class=\"label\">Group "+ (Number(dict[key])+1) +" (" + nationality + ")</span></div>"
   });
   document.querySelectorAll(".legend[id='" + props.number + "']")[0].innerHTML = snippet;
@@ -143,6 +143,8 @@ function updateTable(seatplan){
       <td></td>
     </tr>
   </table>
+
+  <div class="info">(Group number is based on queue position)</div>
   <div class="legend" :id="props.number">
     
   </div>
@@ -198,14 +200,24 @@ th {
 .right {
   text-align: right;
 }
+.summary{
+  font-family: "Readex Pro", sans-serif;  
+  color:white;
+}
+.info{
+  font-family: "Readex Pro", sans-serif;
+  color:white;
+  margin-top:30px;
+}
 </style>
 <style>
 .legend{
   margin: auto;
   margin-top:30px;
   margin-bottom:20px;
-  width: 50vw;
+  width: 75vw;
   text-align: left;
+  font-family: "Readex Pro", sans-serif;
 }
 .legend > div{
   margin-top:5px;
@@ -223,9 +235,5 @@ th {
   height: 18px;
   color:white;
   font-size:18px;
-}
-.summary{
-  font-family: "Readex Pro", sans-serif;  
-  color:white;
 }
 </style>

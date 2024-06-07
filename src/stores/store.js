@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { computed } from 'vue'
-import { Group } from '@/algo'
+import { Group, Ride } from '@/algo'
 
 export const useQueueStore = defineStore('queue', () => {
   const groups = ref([]);
@@ -10,14 +10,11 @@ export const useQueueStore = defineStore('queue', () => {
 
 
 
-  if (localStorage.getItem("groupid")) {
-    id.value = Number(localStorage.getItem("groupid"));
-  }
   if (localStorage.getItem("queue")) {
-    groups.value = JSON.parse(localStorage.getItem("queue"));
-  }
-  if (localStorage.getItem("num_in_queue")) {
-    num_in_queue.value = JSON.parse(localStorage.getItem("num_in_queue"));
+    let json = JSON.parse(localStorage.getItem("queue"))
+    groups.value = json.groups;
+    id.value = json.id;
+    num_in_queue.value = json.num_in_queue;
   }
 
   function addGroup(plus, normal, kids, nationality) {
@@ -48,26 +45,28 @@ export const useQueueStore = defineStore('queue', () => {
 
 export const useRideStore = defineStore('ride', () => {
   // ride format => [number, state, lift-off-time, [groups], seatplan]
-  let latest_liftoff = ref(null);
-
-  const rides = ref([]);
-  if (localStorage.getItem("rides")) {
-    rides.value = JSON.parse(localStorage.getItem("rides"));
-  }
-  const rideNum = ref(1);
-  if (localStorage.getItem("ridenum")) {
-    rideNum.value = Number(localStorage.getItem("ridenum"));
-  }
   const queueStore = useQueueStore();
+
+  const latest_liftoff = ref(null);
+  const rides = ref([]);
+  const rideNum = ref(1);
+
+
+  if (localStorage.getItem("rides")) {
+    let json = JSON.parse(localStorage.getItem("rides"))
+    rides.value = json.rides;
+    rideNum.value = json.rideNum;
+    latest_liftoff.value = json.latest_liftoff;
+  }
 
 
   function liftoff() {
     let ride = rides.value[rides.value.length - 1]
     // set state to lifted-off
-    ride[1] = 1;
-    ride[2] = Date.now();
+    ride.state = 1;
+    ride.liftoff = Date.now();
     // cleanup queue store, remove lifted-off groups
-    let groups = ride[3];
+    let groups = ride.groups;
     for (let x = 0; x < groups.length; x++) {
       let id = groups[x].id;
       queueStore.deleteGroup(id);
@@ -77,14 +76,13 @@ export const useRideStore = defineStore('ride', () => {
 
   function addRide(groups, seats) {
     let latest_ride = rides.value[rides.value.length - 1];
-    if (latest_ride != null && latest_ride[1] == 0) {
+    if (latest_ride != null && latest_ride.state == 0) {
       // update ride only
-      let ride = [rideNum.value - 1, 0, null, groups, seats];
+      let ride = new Ride(rideNum.value - 1, 0, null, groups, seats);
       rides.value.pop();
       rides.value.push(ride);
-      // rides.value[rides.value.length - 1] = ride;
     } else {
-      let ride = [rideNum.value++, 0, null, groups, seats];
+      let ride = new Ride(rideNum.value++, 0, null, groups, seats);
       rides.value.push(ride);
     }
   }
@@ -97,7 +95,7 @@ export const useRideStore = defineStore('ride', () => {
 
   const nextLanding = computed(() => {
     if (latest_liftoff.value != null) {
-      let time = new Date(latest_liftoff.value[2]);
+      let time = new Date(latest_liftoff.value.liftoff);
       let land_time = new Date(time.getTime() + 12 * 60000);
 
       let hours = land_time.getHours();
@@ -118,12 +116,12 @@ export const useRideStore = defineStore('ride', () => {
   })
 
   const waitTime = computed(() => {
-    let time = new Date(latest_liftoff.value[2]);
+    let time = new Date(latest_liftoff.value.liftoff);
     let land_time = new Date(time.getTime() + 12 * 60000);
     let next_free_ride = new Date(land_time.getTime() + capacity.value * 12 * 60000);
     var diff = Math.abs(new Date() - next_free_ride);
     var minutes = Math.floor((diff/1000)/60);
     return minutes
   })
-  return { rides, liftoff, addRide, rideNum, nextLanding, deleteRides, capacity, waitTime }
+  return { rides, liftoff, addRide, rideNum, nextLanding, deleteRides, capacity, waitTime, latest_liftoff }
 })

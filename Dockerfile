@@ -19,6 +19,6 @@ COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
 
 # Copy sw and manifests to src
 RUN mkdir /usr/share/nginx/html/src
-COPY ./sw.js /usr/share/nginx/html/sw.js
+COPY ./public/sw.js /usr/share/nginx/html/sw.js
 COPY src/manifest.json /usr/share/nginx/html/src/manifest.json
 COPY src/assets/logo512.png /usr/share/nginx/html/src/assets/logo512.png

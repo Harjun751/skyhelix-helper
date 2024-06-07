@@ -30,8 +30,8 @@ function generate(){
                 Est. Waiting time: {{ rideStore.waitTime }} minutes
             </div>
         </div>
-        <div v-for="(ride,index) in rideStore.rides.slice().reverse()" :key="ride[0]">
-            <RideDisplay :number="ride[0]" :state="ride[1]" :liftoff="ride[2]" :groups="ride[3]" :seatplan="ride[4]" :toExpand="index==0 && ride[1]==0 ? true : false"/>
+        <div v-for="(ride,index) in rideStore.rides.slice().reverse()" :key="ride.number">
+            <RideDisplay :ride="ride" :toExpand="index==0 && ride[1]==0 ? true : false"/>
         </div>
         <button class="delete" @click="rideStore.deleteRides()">Delete all rides</button>
         <button id="generate" @click="generate()">

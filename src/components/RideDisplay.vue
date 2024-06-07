@@ -5,11 +5,11 @@ import RideSeatingPlan from '@/components/RideSeatingPlan.vue'
 import { useRideStore } from '../stores/store'
 const store = useRideStore();
 
-const props = defineProps(['number', 'state', 'liftoff', 'groups', 'seatplan', 'toExpand'])
+const props = defineProps(['ride', 'toExpand'])
 let expand = ref(props.toExpand);
 const formattedTime = computed(() => {
-    if (props.liftoff!=null){
-        let date = new Date(props.liftoff);
+    if (props.ride.liftoff!=null){
+        let date = new Date(props.ride.liftoff);
         let hours = date.getHours();
         if (hours < 10){
             hours = "0" + hours;
@@ -28,8 +28,8 @@ const formattedTime = computed(() => {
     <div class="container" @click="expand = !expand">
         <div class="info" :class="{ 'maximized': expand }">
             <p>
-            <span class="rideName">Ride {{ props.number }}</span>
-            <span class="label" v-if="state==1">
+            <span class="rideName">Ride {{ props.ride.number }}</span>
+            <span class="label" v-if="props.ride.state==1">
                 lift-off {{ formattedTime }}
             </span>
             <span class="label pending" v-else>
@@ -40,8 +40,8 @@ const formattedTime = computed(() => {
 
         <div class="seating_plan" :class="{ 'maximized': expand }">
             <p>Suggested Seating Plan</p>
-            <RideSeatingPlan :seatplan="props.seatplan" :number="props.number" />
-            <button v-if="state==0" @click="store.liftoff()">Lift Off</button>
+            <RideSeatingPlan :ride="ride" :number="props.ride.number" />
+            <button v-if="props.ride.state==0" @click="store.liftoff()">Lift Off</button>
         </div>
     </div>
 </template>

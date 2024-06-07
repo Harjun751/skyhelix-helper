@@ -11,7 +11,7 @@ const groups = store.groups;
   <GroupEditor p=0 n=0 k=0 id=-1 nationality="India" submit_type=true style="margin-top:40px;" />
   <TransitionGroup name="list" tag="div" style="margin-bottom:90px; margin-top:40px;">
     <div v-for="(grp, index) in groups" :key="grp.id">
-      <GroupDisplay :plus_size=grp.plus_size :normal=grp.normal :kids=grp.kids :nationality=grp.nationality :id=grp.id :number="index + 1" class="animated" />
+      <GroupDisplay :group="grp" :number="index + 1" class="animated" />
     </div>
   </TransitionGroup>
 </template>

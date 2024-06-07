@@ -18,16 +18,14 @@ watch(
     pinia.state,
     (state) => {
       if (state.queue){
-        localStorage.setItem("queue", JSON.stringify(state.queue.groups));
-        localStorage.setItem("groupid", JSON.stringify(state.queue.id));
-        localStorage.setItem("num_in_queue", JSON.stringify(state.queue.num_in_queue));
+        localStorage.setItem("queue", JSON.stringify(state.queue));
       }
       if (state.ride){
-        localStorage.setItem("rides", JSON.stringify(state.ride.rides, function replacer(key,value){
+        localStorage.setItem("rides", JSON.stringify(state.ride, function replacer(key,value){
           var blocklist = ['next']
           return blocklist.indexOf(key) === -1 ? value : undefined
         }));
-        localStorage.setItem("ridenum", JSON.stringify(state.ride.rideNum));
+        // localStorage.setItem("ridenum", JSON.stringify(state.ride.rideNum));
       }
     },
     { deep: true }
