@@ -23,12 +23,6 @@ function generate(){
             <div>
                 Ride touches down <span class="label">~{{ rideStore.nextLanding }}</span>
             </div>
-            <div>
-                Current Q capacity: {{ rideStore.capacity }} rides
-            </div>
-            <div>
-                Est. Waiting time: {{ rideStore.waitTime }} minutes
-            </div>
         </div>
         <div v-for="(ride,index) in rideStore.rides.slice().reverse()" :key="ride.number">
             <RideDisplay :ride="ride" :toExpand="index==0 && ride[1]==0 ? true : false"/>
