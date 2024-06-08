@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import QueuePage from '@/components/QueuePage.vue'
-import RidePage from '@/components/RidePage.vue'
+import QueuePage from '@/views/QueuePage.vue'
+import RidePage from '@/views/RidePage.vue'
+import ExcelPageVue from '@/views/ExcelPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,6 +15,11 @@ const router = createRouter({
       path: '/ride',
       name: 'rides',
       component: RidePage
+    },
+    {
+      path: '/excel',
+      name: 'excel',
+      component: ExcelPageVue
     },
   ]
 })

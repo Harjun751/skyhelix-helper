@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import GroupEditor from '@/components/GroupEditor.vue'
+import GroupEditor from '@/components/QueueComponents/GroupEditor.vue'
 const props = defineProps(['group', 'number'])
 let editing = ref(false);
 </script>

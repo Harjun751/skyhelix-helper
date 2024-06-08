@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, toRef, watch, computed } from 'vue'
-import { useQueueStore } from '../stores/store'
+import { useQueueStore } from '@/stores/store'
 
 const props = defineProps(['ride', 'number'])
 const groupColours = ["#00A2E8", "#FFF200", "#FF7F27", "#B97A57", "red", "black", "green", "blue"];

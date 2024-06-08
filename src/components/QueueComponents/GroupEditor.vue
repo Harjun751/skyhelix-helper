@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useQueueStore } from '../stores/store'
+import { useQueueStore } from '@/stores/store'
 
 const props = defineProps(['p', 'n', 'k', 'id', 'nationality','submit_type'])
 const store = useQueueStore();

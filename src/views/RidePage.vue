@@ -1,7 +1,7 @@
 <script setup>
-import RideDisplay from '@/components/RideDisplay.vue'
+import RideDisplay from '@/components/RideComponents/RideDisplay.vue'
 import { brute_force_seats  } from '@/algo';
-import { useQueueStore, useRideStore } from '../stores/store'
+import { useQueueStore, useRideStore } from '@/stores/store'
 import image from "@/assets/create.png";
 import Swal from 'sweetalert2';
 

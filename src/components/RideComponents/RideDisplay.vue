@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { computed } from 'vue'
-import RideSeatingPlan from '@/components/RideSeatingPlan.vue'
-import { useRideStore } from '../stores/store'
+import RideSeatingPlan from '@/components/RideComponents/RideSeatingPlan.vue'
+import { useRideStore } from '@/stores/store'
 const store = useRideStore();
 
 const props = defineProps(['ride', 'toExpand'])
