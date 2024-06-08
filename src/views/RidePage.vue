@@ -1,8 +1,9 @@
 <script setup>
-import RideDisplay from '@/components/RideDisplay.vue'
+import RideDisplay from '@/components/RideComponents/RideDisplay.vue'
 import { brute_force_seats  } from '@/algo';
-import { useQueueStore, useRideStore } from '../stores/store'
+import { useQueueStore, useRideStore } from '@/stores/store'
 import image from "@/assets/create.png";
+import Swal from 'sweetalert2';
 
 const store = useQueueStore();
 const rideStore = useRideStore();
@@ -14,6 +15,21 @@ function generate(){
     let [seats, groups] = brute_force_seats(data);
     rideStore.addRide(groups, seats);
 }
+
+function warning(){
+    Swal.fire({
+      title: 'AYO CHILL',
+      text: 'Are you sure you want to delete all the rides?',
+      icon: 'error',
+      showCancelButton: true,
+      confirmButtonText: 'yea!',
+      cancelButtonText: 'nope!'
+    }).then((result) => {
+        if (result.isConfirmed){
+            rideStore.deleteRides();
+        } 
+    })
+}
 </script>
 
 <template>
@@ -23,17 +39,11 @@ function generate(){
             <div>
                 Ride touches down <span class="label">~{{ rideStore.nextLanding }}</span>
             </div>
-            <div>
-                Current Q capacity: {{ rideStore.capacity }} rides
-            </div>
-            <div>
-                Est. Waiting time: {{ rideStore.waitTime }} minutes
-            </div>
         </div>
         <div v-for="(ride,index) in rideStore.rides.slice().reverse()" :key="ride.number">
             <RideDisplay :ride="ride" :toExpand="index==0 && ride[1]==0 ? true : false"/>
         </div>
-        <button class="delete" @click="rideStore.deleteRides()">Delete all rides</button>
+        <button class="delete" @click="warning()">Delete all rides</button>
         <button id="generate" @click="generate()">
             <div>
                 <img :src=image />
@@ -55,7 +65,6 @@ button{
     max-width: 350px;
     padding: 0;
     border: 0;
-    font-family: "Readex Pro", sans-serif;
     font-size: 23px;
     cursor: pointer;
     display:block;
@@ -67,7 +76,6 @@ button{
     max-width: 350px;
     border: 1px solid var(--secondary-color);
     line-height:55px;
-    font-family: "Readex Pro", sans-serif;
 }
 .label{
     text-shadow: 0px 0px 10px;

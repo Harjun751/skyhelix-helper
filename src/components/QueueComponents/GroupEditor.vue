@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useQueueStore } from '../stores/store'
+import { useQueueStore } from '@/stores/store'
 
 const props = defineProps(['p', 'n', 'k', 'id', 'nationality','submit_type'])
 const store = useQueueStore();
@@ -95,7 +95,6 @@ let nationality = ref(props.nationality);
 .label{
     color: var(--font-color-white);
     font-size: 20px;
-    font-family: "Readex Pro", sans-serif;
     line-height: 42px;
 }
 .minus, .plus{
@@ -117,7 +116,6 @@ let nationality = ref(props.nationality);
     margin-top:20px;
     width:117px;
     background-color: var(--secondary-color);
-    font-family: "Readex Pro", sans-serif;
     font-size: 20px;
     border:0;
     height:42px;
@@ -129,7 +127,6 @@ let nationality = ref(props.nationality);
 }
 .input_group > select{
     width:113.61px;
-    font-family: "Readex Pro", sans-serif;
 }
 @keyframes shake {
   0% { transform: translate(1px, 1px) rotate(0deg); }

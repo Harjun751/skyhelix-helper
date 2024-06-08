@@ -26,10 +26,10 @@
 
 html{
   background: linear-gradient(var(--primary-color), var(--primary-color-end));
-  font-family: "Inter", sans-serif;
   min-height: 100%;
   overflow-x: hidden;
   position:relative;
+  font-family: "Readex Pro", sans-serif;
 }
 html:before{
   content: "";

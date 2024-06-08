@@ -1,7 +1,7 @@
 <script setup>
-import GroupEditor from '@/components/GroupEditor.vue'
-import GroupDisplay from '@/components/GroupDisplay.vue'
-import { useQueueStore } from '../stores/store'
+import GroupEditor from '@/components/QueueComponents/GroupEditor.vue'
+import GroupDisplay from '@/components/QueueComponents/GroupDisplay.vue'
+import { useQueueStore } from '@/stores/store'
 
 const store = useQueueStore();
 const groups = store.groups;

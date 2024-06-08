@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import { watch } from 'vue'
 import QLogo from './components/QLogo.vue';
 import HelixLogo from './components/HelixLogo.vue';
+import image from "@/assets/excel-twotone.png";
 import { useRoute } from "vue-router";
 
 const qActive = ref(true);
@@ -61,6 +62,22 @@ watch(() => darkmode.value, (newVal) => {
         </table>
       </RouterLink>
     </div>
+    <div class="excel">
+      <RouterLink to="/excel">
+        <table>
+          <tr>
+            <td>
+              <div class="logoContainer">
+                <img :src="image">
+              </div>
+            </td>
+          </tr>
+          <tr class="text">
+            <td><span>Excel</span></td>
+          </tr>
+        </table>
+      </RouterLink>
+    </div>
 
   </footer>
 </template>
@@ -91,6 +108,13 @@ footer > div > a {
 
 .logoContainer>svg {
   height: 44px;
+}
+.logoContainer > img{
+  height: 44px;
+}
+.logoContainer{
+  width: 100%;
+  text-align: center;
 }
 
 .text {

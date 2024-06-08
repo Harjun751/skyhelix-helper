@@ -111,17 +111,5 @@ export const useRideStore = defineStore('ride', () => {
     return null
   })
 
-  const capacity = computed(() => {
-    return Math.ceil(queueStore.num_in_queue / 16);
-  })
-
-  const waitTime = computed(() => {
-    let time = new Date(latest_liftoff.value.liftoff);
-    let land_time = new Date(time.getTime() + 12 * 60000);
-    let next_free_ride = new Date(land_time.getTime() + capacity.value * 12 * 60000);
-    var diff = Math.abs(new Date() - next_free_ride);
-    var minutes = Math.floor((diff/1000)/60);
-    return minutes
-  })
-  return { rides, liftoff, addRide, rideNum, nextLanding, deleteRides, capacity, waitTime, latest_liftoff }
+  return { rides, liftoff, addRide, rideNum, nextLanding, deleteRides, latest_liftoff }
 })

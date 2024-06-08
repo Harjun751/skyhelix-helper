@@ -31,3 +31,4 @@ coverage
 nginx-selfsigned.crt
 nginx-selfsigned.key
 .env
+template.xlsx

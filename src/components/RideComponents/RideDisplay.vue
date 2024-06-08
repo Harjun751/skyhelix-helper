@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { computed } from 'vue'
-import RideSeatingPlan from '@/components/RideSeatingPlan.vue'
-import { useRideStore } from '../stores/store'
+import RideSeatingPlan from '@/components/RideComponents/RideSeatingPlan.vue'
+import { useRideStore } from '@/stores/store'
 const store = useRideStore();
 
 const props = defineProps(['ride', 'toExpand'])
@@ -92,6 +92,7 @@ const formattedTime = computed(() => {
     font-size: 20px;
 }
 .label{
+    font-family: "Inter", sans-serif;
     color: var(--font-color-dark);
     background-color: var(--secondary-color);
     padding:5px 20px;
@@ -115,7 +116,6 @@ button{
     background-color: var(--secondary-color);
     padding: 0;
     border: 0;
-    font-family: "Readex Pro", sans-serif;
     font-size: 15px;
     margin-bottom:20px;
     border-radius: 5px;

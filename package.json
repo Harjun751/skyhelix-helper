@@ -10,7 +10,9 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "exceljs": "^4.4.0",
     "pinia": "^2.1.7",
+    "sweetalert2": "^11.11.1",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
