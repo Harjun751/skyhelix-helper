@@ -20,7 +20,7 @@ const summary = computed(() => {
     let crawler = props.ride.seatplan[x];
     if (crawler.occupied && (crawler.occupant == "" || crawler.occupant == "L")){
       num_adults+=1;
-    } else if (crawler.occupied && crawler.occupant=="K"){
+    } else if (crawler.occupied && crawler.occupant=="C"){
       num_kids+=1
     }
   }
@@ -213,6 +213,7 @@ th {
   margin-bottom:20px;
   width: 75vw;
   text-align: left;
+  padding: 0 20px;
 }
 .legend > div{
   margin-top:5px;

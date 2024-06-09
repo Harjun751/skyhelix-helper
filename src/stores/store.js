@@ -50,6 +50,8 @@ export const useRideStore = defineStore('ride', () => {
   const latest_liftoff = ref(null);
   const rides = ref([]);
   const rideNum = ref(1);
+  const total_pax = ref(0);
+  const breakdown = ref({});
 
 
   if (localStorage.getItem("rides")) {
@@ -57,6 +59,8 @@ export const useRideStore = defineStore('ride', () => {
     rides.value = json.rides;
     rideNum.value = json.rideNum;
     latest_liftoff.value = json.latest_liftoff;
+    total_pax.value = json.total_pax;
+    breakdown.value = json.breakdown;
   }
 
 
@@ -69,8 +73,18 @@ export const useRideStore = defineStore('ride', () => {
     let groups = ride.groups;
     for (let x = 0; x < groups.length; x++) {
       let id = groups[x].id;
+      let group = ride.groups[x];
+      if (breakdown[group.nationality] == null){
+        breakdown[group.nationality] = { "K": group.kids, "A": group.plus_size + group.normal}
+        total_pax.value += group.kids + group.plus_size + group.normal
+      } else {
+        breakdown[group.nationality]["K"] = breakdown[group.nationality]["K"] + group.kids;
+        breakdown[group.nationality]["A"] = breakdown[group.nationality]["A"] + group.plus_size + group.normal;
+        total_pax.value += group.kids + group.plus_size + group.normal
+      }
       queueStore.deleteGroup(id);
     }
+
     latest_liftoff.value = ride;
   }
 
@@ -91,6 +105,8 @@ export const useRideStore = defineStore('ride', () => {
     rides.value = [];
     latest_liftoff.value = null;
     rideNum.value = 1;
+    breakdown.value = { };
+    total_pax.value = 0;
   }
 
   const nextLanding = computed(() => {
@@ -105,11 +121,12 @@ export const useRideStore = defineStore('ride', () => {
       let minutes = land_time.getMinutes();
       if (minutes < 10) {
         minutes = "0" + minutes;
+     
       }
       return String(hours) + String(minutes)
     }
     return null
   })
 
-  return { rides, liftoff, addRide, rideNum, nextLanding, deleteRides, latest_liftoff }
+  return { rides, liftoff, addRide, rideNum, nextLanding, deleteRides, latest_liftoff, total_pax, breakdown }
 })
