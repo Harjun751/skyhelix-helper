@@ -139,6 +139,10 @@ function get_seat_variations(group, seats){
         if (partitions_count<=best_partitions_count){
             // add score to partitions based on best partitions.. should be 1 all the time anyway...
             score += (best_partitions_count-partitions_count + 1);
+        } else {
+            // penalize partitions heavier if group size is lower
+            score -= (16-group.size)
+            
         }
 
         variations.push([new_seats, score]);
@@ -193,7 +197,7 @@ function getSeats(){
     seats[15].next = seats[0];
     return seats;
 }
-function brute_force(queue, variation, score){
+function brute_force(queue, variation, score, perfect_score){
     if (queue.length == 0){
         // base case
         return [score, variation];
@@ -212,7 +216,7 @@ function brute_force(queue, variation, score){
             let variation = possibilities[x][0];
             let var_score = possibilities[x][1];
             // Recurse. Call brute force with each possible variation
-            let results = brute_force(queue.slice(), variation, (score + var_score));
+            let results = brute_force(queue.slice(), variation, (score + var_score), perfect_score);
             // results will be the best variation of all sub-possiblities
 
             // Compare results with current best score
@@ -221,20 +225,40 @@ function brute_force(queue, variation, score){
             if (new_score > best_score){
                 best_score = new_score;
                 best_variation = results[1];
+                if (best_score == perfect_score){
+                    console.log("Reached early termination!")
+                    return [best_score, best_variation]
+                }
             }
         }
         return [best_score, best_variation];
     }
 }
 
+function calculate_best_case(groups){
+    let perfect_score = 0;
+    for (let x = 0; x < groups.length; x++){
+        let group = groups[x];
+        // score if full group is allocated
+        let curr_score = 16;
+        // add score if all plus size allocated
+        curr_score += group.plus_size;
+        // add score for partition bonus
+        curr_score += 1;
+        perfect_score+=curr_score;
+    }
+    return perfect_score;
+}
+
 export function brute_force_seats(queue){
     let seats = getSeats();
     let next_groups = get_groups(queue)[0];
-    let bruh = structuredClone(next_groups);
-    let bestseats = brute_force(next_groups, seats, 0);
+    let groups = structuredClone(next_groups);
+    let perfect_score = calculate_best_case(groups);
+    let bestseats = brute_force(next_groups, seats, 0, perfect_score);
     bestseats = bestseats[1]
-    allocate_seats(bestseats, bruh)
-    return [bestseats, bruh];
+    allocate_seats(bestseats, groups)
+    return [bestseats, groups];
 }
 
 function allocate_seats(seats, groups){

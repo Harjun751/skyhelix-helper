@@ -89,6 +89,8 @@ module.exports = function generateSpreadsheet(rides){
     manifest.getCell("H4").value = "Total Per Ride";
     manifest.getCell("I4").value = "Suspension/Inclement Weather";
     manifest.getCell("J4").value = "Remarks";
+    manifest.getCell("J4").value = "Remarks";
+    manifest.getCell(String.fromCharCode(65+27)+1).value = "test";
 
 
     let row = 5;

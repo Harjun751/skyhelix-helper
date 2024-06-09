@@ -18,19 +18,29 @@ self.addEventListener('activate', (e) => {
 // Call fetch event
 self.addEventListener('fetch', e => {
     e.respondWith(
-        caches.match(e.request)
-            .then(res => {
-                if (res!=null){
-                    return res
-                } else {
-                    return fetch(e.request).then(res => {
-                        const resClone = res.clone();
-                        caches.open(cacheName).then(
-                            cache => cache.put(e.request, resClone)
-                        )
-                        return res;
-                    })
-                }
-            })
+        // This is a fetch-first method
+        fetch(e.request).then(res => {
+            const resClone = res.clone();
+            caches.open(cacheName).then(cache => {
+                cache.put(e.request, resClone);
+            });
+            return res;
+        }).catch( err => caches.match(e.request).then(res => res))
+
+        // Below is a cache-first method.
+        // caches.match(e.request)
+        //     .then(res => {
+        //         if (res!=null){
+        //             return res
+        //         } else {
+        //             return fetch(e.request).then(res => {
+        //                 const resClone = res.clone();
+        //                 caches.open(cacheName).then(
+        //                     cache => cache.put(e.request, resClone)
+        //                 )
+        //                 return res;
+        //             })
+        //         }
+        //     })
     )
 })

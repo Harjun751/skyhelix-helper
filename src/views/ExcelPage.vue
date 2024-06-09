@@ -1,5 +1,6 @@
 <script setup>
     import { useRideStore } from '@/stores/store';
+
     const store = useRideStore();
 
     function generateSheet(){
@@ -24,10 +25,40 @@
             </div>
         </button>
     </div>
-    total pax??
+    <div class="pax">
+        Breakdown
+        <table>
+            <thead>
+                <td>Nationality</td>
+                <td>Adults</td>
+                <td>Kids</td>
+                <td>Total</td>
+            </thead>
+            <tbody>
+                <!-- <tr v-for="(natl) in Object.entries(store.breakdown.value)" :key="natl">
+                    <td>{{  natl[0] }}</td>
+                    <td>{{  natl[1]["A"] }}</td>
+                    <td>{{  natl[1]["K"] }}</td>
+                    <td>{{  natl[1]["K"] + natl[1]["A"] }}</td>
+                </tr> -->
+                <tr>
+                    <td>This is</td>
+                    <td>a</td>
+                    <td>work in</td>
+                    <td>progress</td>
+                </tr>
+                <tr>
+                    <td>TOTAL</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ store.total_pax }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
 
-<style>
+<style scoped>
 div{
     text-align: center;
 }
@@ -45,6 +76,26 @@ button{
     display:block;
     background-color: var(--secondary-color);
     box-shadow: 0px 5px rgba(0,0,0, 0.25);
+}
+table{
+    margin:auto;
+    color: black;
+}
+td, th {
+  padding:8px;
+}
+thead{
+    background-color: white;
+}
+tr{
+   background-color: white; 
+}
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+.pax{
+    color: white;
+    margin-top:20px;
 }
 /* #generate > div > span {
     vertical-align: middle;

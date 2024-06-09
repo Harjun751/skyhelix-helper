@@ -41,7 +41,7 @@ function warning(){
             </div>
         </div>
         <div v-for="(ride,index) in rideStore.rides.slice().reverse()" :key="ride.number">
-            <RideDisplay :ride="ride" :toExpand="index==0 && ride[1]==0 ? true : false"/>
+            <RideDisplay :ride="ride" :toExpand="index==0 && ride.state==0 ? true : false"/>
         </div>
         <button class="delete" @click="warning()">Delete all rides</button>
         <button id="generate" @click="generate()">

@@ -36,6 +36,9 @@ let editing = ref(false);
 </template>
 
 <style scoped>
+#normal, #plus, #child{
+    text-align: center;
+}
 #editor.v-enter-active{
     transition: opacity 0.5s;
 }
@@ -92,7 +95,7 @@ let editing = ref(false);
     width:33.3333%;
     background-color: var(--secondary-color);
     display: inline-block;
-    text-align: center;
+    ;
 }
 .hero span{
     color:var(--font-color-dark);
