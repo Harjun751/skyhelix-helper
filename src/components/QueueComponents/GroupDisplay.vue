@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import GroupEditor from '@/components/QueueComponents/GroupEditor.vue'
+import image from "@/assets/burbger.png"
 const props = defineProps(['group', 'number'])
 let editing = ref(false);
 </script>
@@ -9,6 +10,7 @@ let editing = ref(false);
 <template>
     <div id="grouptainer" :class="{ 'editing': editing }" @click="editing = !editing">
         <div id="header">
+            <img :src="image"/>
             <p>Group {{ props.number }} ({{ props.group.nationality }})</p>
         </div>
         <Transition>
@@ -84,6 +86,12 @@ let editing = ref(false);
 #header p{
     margin: 0;
     margin-top:2px;
+}
+#header > img {
+    float: left;
+    position: relative;
+    left:15px;
+    top:2px;
 }
 #main{
     height:94px;

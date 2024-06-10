@@ -5,18 +5,8 @@ import { watch } from 'vue'
 import QLogo from './components/QLogo.vue';
 import HelixLogo from './components/HelixLogo.vue';
 import image from "@/assets/excel-twotone.png";
-import { useRoute } from "vue-router";
 
-const qActive = ref(true);
-const route = useRoute();
 const darkmode = ref(true);
-watch(() => route.name, (newR) => {
-  if (newR == "queue") {
-    qActive.value = true;
-  } else {
-    qActive.value = false;
-  }
-})
 watch(() => darkmode.value, (newVal) => {
   if (newVal) {
     document.documentElement.setAttribute('data-theme', 'dark');

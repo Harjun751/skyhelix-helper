@@ -4,15 +4,19 @@
     const store = useRideStore();
 
     function generateSheet(){
-        let generated = window.myBundle(store.rides);
-        generated.then((result) => {
-            const blob = new Blob([result], { type: 'application/octet-stream'})
-            const link = document.createElement('a')
-            link.href = URL.createObjectURL(blob);
-            link.download = "SH CABIN MANIFEST.xlsx";
-            link.click();
-            URL.revokeObjectURL(link.href);
-        })
+        fetch("template.xlsx").then(res => { 
+            res.arrayBuffer().then(data => {
+                let generated = window.myBundle(store.rides, store.total_pax, store.breakdown, data);
+                generated.then((result) => {
+                    const blob = new Blob([result], { type: 'application/octet-stream'})
+                    const link = document.createElement('a')
+                    link.href = URL.createObjectURL(blob);
+                    link.download = "SH CABIN MANIFEST.xlsx";
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                })
+            });
+        });
     }
 </script>
 
@@ -35,17 +39,11 @@
                 <td>Total</td>
             </thead>
             <tbody>
-                <!-- <tr v-for="(natl) in Object.entries(store.breakdown.value)" :key="natl">
+                <tr v-for="(natl) in Object.entries(store.breakdown)" :key="natl">
                     <td>{{  natl[0] }}</td>
                     <td>{{  natl[1]["A"] }}</td>
                     <td>{{  natl[1]["K"] }}</td>
                     <td>{{  natl[1]["K"] + natl[1]["A"] }}</td>
-                </tr> -->
-                <tr>
-                    <td>This is</td>
-                    <td>a</td>
-                    <td>work in</td>
-                    <td>progress</td>
                 </tr>
                 <tr>
                     <td>TOTAL</td>

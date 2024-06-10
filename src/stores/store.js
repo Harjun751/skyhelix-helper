@@ -74,12 +74,12 @@ export const useRideStore = defineStore('ride', () => {
     for (let x = 0; x < groups.length; x++) {
       let id = groups[x].id;
       let group = ride.groups[x];
-      if (breakdown[group.nationality] == null){
-        breakdown[group.nationality] = { "K": group.kids, "A": group.plus_size + group.normal}
+      if (breakdown.value[group.nationality] == null){
+        breakdown.value[group.nationality] = { "K": group.kids, "A": group.plus_size + group.normal}
         total_pax.value += group.kids + group.plus_size + group.normal
       } else {
-        breakdown[group.nationality]["K"] = breakdown[group.nationality]["K"] + group.kids;
-        breakdown[group.nationality]["A"] = breakdown[group.nationality]["A"] + group.plus_size + group.normal;
+        breakdown.value[group.nationality]["K"] = breakdown.value[group.nationality]["K"] + group.kids;
+        breakdown.value[group.nationality]["A"] = breakdown.value[group.nationality]["A"] + group.plus_size + group.normal;
         total_pax.value += group.kids + group.plus_size + group.normal
       }
       queueStore.deleteGroup(id);

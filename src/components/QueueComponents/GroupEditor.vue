@@ -43,7 +43,7 @@ let natl = ref(default_natl);
                 <option>Australia</option>
                 <option>China</option>
                 <option>Europe</option>
-                <option>Hong Kong</option>
+                <option value="HongKong">Hong Kong</option>
                 <option>India</option>
                 <option>Indonesia</option>
                 <option>Japan</option>
@@ -60,11 +60,17 @@ let natl = ref(default_natl);
             </select>
         </div>
         <div class="submit" v-if="submit_type=='true'">
-            <input id="submit" @click="store.addGroup(plus_size, normal, kids, natl);plus_size=0;normal=0;kids=0;natl=default_natl" type="submit" value="Add"/>
+            <div class="btnwrapper">
+                <button id="submit" @click="store.addGroup(plus_size, normal, kids, natl);plus_size=0;normal=0;kids=0;natl=default_natl" type="submit">Add</button>
+            </div>
         </div>
         <div class="submit" v-else>
-            <input id="delete" @click="store.deleteGroup(props.id)" type="submit" value="Delete"/>
-            <input id="update" @click="store.updateGroup(plus_size, normal, kids, natl, props.id);$emit('minimize')" type="submit" value="Update"/>
+            <div class="btnwrapper delete">
+                <button id="delete" @click="store.deleteGroup(id)" type="button">Delete</button>
+            </div>
+            <div class="btnwrapper update">
+                <button id="update" @click="store.updateGroup(plus_size, normal, kids, natl, props.id);$emit('minimize')" type="button">Update</button>
+            </div>
         </div>
     </div>
 </template>
@@ -113,28 +119,44 @@ let natl = ref(default_natl);
 .submit{
     text-align: center;
 }
-.submit input{
-    margin-top:20px;
+.submit button{
     width:117px;
     background-color: var(--secondary-color);
     font-size: 20px;
     border:0;
     height:42px;
     border-radius: 5px;
+    transform: translate(-3px, -3px);
+    transition: all 0.5s;
+}
+.submit button:active{
+    transform: translate(0px, 0px);
+}
+.submit > .btnwrapper{
+    margin: auto;
+    margin-top:20px;
+    content:'';
+    width: 117px;
+    height:42px;
+    border-radius:5px;
+    background: #6C5641;
+    display:inline-block;
+    z-index: -1;
+}
+.btnwrapper.delete{
+    background: #792D2E;
 }
 #delete{
     background-color: var(--red);
+}
+.submit > .btnwrapper.update{
+    margin-left:15px;
+}
+.submit > .btnwrapper.delete{
     margin-right:15px;
 }
 .input_group > select{
     width:113.61px;
-}
-#submit:active, #delete:active, #update:active{
-    box-shadow: 0 0 0 0;
-}
-#submit, #delete, #update{
-    box-shadow: 0 0 5px 2px;
-    transition: all 0.2s;
 }
 
 @keyframes shake {

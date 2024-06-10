@@ -3,7 +3,7 @@ import { onMounted, toRef, watch, computed } from 'vue'
 import { useQueueStore } from '@/stores/store'
 
 const props = defineProps(['ride', 'number'])
-const groupColours = ["#00A2E8", "#FFF200", "#FF7F27", "#B97A57", "red", "black", "green", "blue"];
+const groupColours = ["#e6194B", "#3cb44b", "#ffe119", "#B97A57", "#4363d8", "#f58231", "#911eb4", "#42d4f4", "#f032e6", "#bfef45", "#fabed4", "#469990", "#dcbeff", "#9A6324", "#fffac8", "#aaffc3", "#ffffff"];
 const store = useQueueStore();
 const groups = store.groups;
 const testy = toRef(props, 'ride');
@@ -57,11 +57,16 @@ function updateTable(seatplan){
     }
   }
   let snippet = ""
-  Object.keys(dict).forEach(function (key) {
-    let color = groupColours[dict[key]];
-    let nationality = natl[key];
-    snippet += "<div><div class=\"color\" style=\"background-color:"+ color +"\"></div><span class=\"label\">Group "+ (Number(dict[key])+1) +" (" + nationality + ")</span></div>"
-  });
+  Object.keys(dict).map(function(key) {
+    return [dict[key], key]
+  }).sort(function (first,second) {
+    return first[0] - second[0];
+  }).forEach(function (val) {
+    let index = val[0];
+    let color = groupColours[val[0]];
+    let nationality = natl[val[1]];
+    snippet += "<div><div class=\"color\" style=\"background-color:"+ color +"\"></div><span class=\"label\">Group "+ (Number(index)+1) +" (" + nationality + ")</span></div>"
+  })
   document.querySelectorAll(".legend[id='" + props.number + "']")[0].innerHTML = snippet;
 }
 </script>
