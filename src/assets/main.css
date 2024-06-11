@@ -61,4 +61,6 @@ p{
 body
 {
   overscroll-behavior-y: contain;
+  touch-action:none;
+  -webkit-tap-highlight-color: transparent;
 }

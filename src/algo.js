@@ -32,12 +32,14 @@ export class Group {
 }
 
 class Seat {
-    constructor(number, next, occupied, long, hasPartition){
+    constructor(number, next, occupied, long, hasPartition, hasPole, isShort){
         this.number = number;
         this.next = next;
         this.occupied = occupied;
         this.long = long;
         this.hasPartition = hasPartition;
+        this.hasPole = hasPole;
+        this.isShort = isShort;
         this.occupant = "";
         this.groupid = -1;
     }
@@ -60,6 +62,9 @@ function get_seat_variations(group, seats){
     let long_count = 0;
     let partitions_count = 0;
     let best_partitions_count = 0;
+    let poles_count = 0;
+    let short_count = 0;
+
     if (group.size <= 4){
         best_partitions_count = 0;
     } else if (group.size <= 8) {
@@ -76,6 +81,13 @@ function get_seat_variations(group, seats){
     if (end.long){
         long_count+=1;
     }
+    if (end.hasPole){
+        poles_count+=1;
+    }
+    if (end.isShort){
+        short_count+=1;
+    }
+    if (end)
     for (let i = 0; i < group.size - 1; i++){
         if (end.hasPartition){
             partitions_count+=1;
@@ -86,6 +98,12 @@ function get_seat_variations(group, seats){
         }
         if (end.occupied){
             occupied_count+=1;
+        }
+        if (end.hasPole){
+            poles_count += 1;
+        }
+        if (end.isShort){
+            short_count+=1;
         }
     }
     let variations = [];
@@ -102,6 +120,12 @@ function get_seat_variations(group, seats){
             if (start.long){
                 long_count-=1;
             }
+            if (start.hasPole){
+                poles_count-=1;
+            }
+            if (start.isShort){
+                short_count-=1;
+            }
             if (start.number==16){
                 return variations;
             }
@@ -115,6 +139,12 @@ function get_seat_variations(group, seats){
             }
             if (end.occupied){
                 occupied_count+=1;
+            }
+            if (end.hasPole){
+                poles_count+=1;
+            }
+            if (end.isShort){
+                short_count+=1;
             }
         }
 
@@ -142,7 +172,14 @@ function get_seat_variations(group, seats){
         } else {
             // penalize partitions heavier if group size is lower
             score -= (16-group.size)
-            
+        }
+        if (poles_count>0){
+            // penalize using the poled seats
+            score -= poles_count;
+        }
+        if (short_count>0){
+            // penalize short seatbelts
+            score -= short_count;
         }
 
         variations.push([new_seats, score]);
@@ -187,7 +224,15 @@ function getSeats(){
         if (i==4 || i==8 || i==12 || i == 16){
             hasPartition = true
         }
-        let seat = new Seat(i, null, false, isLong, hasPartition)
+        let hasPole = false;
+        if (i==5 || i == 16){
+            hasPole = true;
+        }
+        let isShort = false;
+        if (i==16 || i==14 || i==13){
+            isShort = true;
+        }
+        let seat = new Seat(i, null, false, isLong, hasPartition, hasPole, isShort)
         if (previous!=null){
             previous.next = seat;
         }
@@ -212,6 +257,9 @@ function brute_force(queue, variation, score, perfect_score){
 
         // get all possible placements of this group
         let possibilities = get_seat_variations(group, variation);
+        possibilities.sort(function(a, b) {
+            return b[1] - a[1]
+        })
         for (let x = 0; x < possibilities.length; x++){
             let variation = possibilities[x][0];
             let var_score = possibilities[x][1];

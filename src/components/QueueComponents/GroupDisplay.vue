@@ -1,16 +1,15 @@
 <script setup>
 import { ref } from 'vue';
 import GroupEditor from '@/components/QueueComponents/GroupEditor.vue'
-import image from "@/assets/burbger.png"
+import image from "@/assets/draggable.png"
 const props = defineProps(['group', 'number'])
 let editing = ref(false);
 </script>
 
 
 <template>
-    <div id="grouptainer" :class="{ 'editing': editing }" @click="editing = !editing">
+    <div id="grouptainer" :class="{ 'editing': editing }" @click="editing = !editing" draggable="false">
         <div id="header">
-            <img :src="image"/>
             <p>Group {{ props.number }} ({{ props.group.nationality }})</p>
         </div>
         <Transition>
@@ -26,6 +25,7 @@ let editing = ref(false);
                 <div id="child" class="hero">
                     <span>Child</span>
                     <p>{{ group.kids }}</p>
+                    <img :src="image"/>
                 </div>
             </div>
             <div id="editor" v-else>
@@ -119,9 +119,17 @@ let editing = ref(false);
 }
 #child{
     border-radius: 0 0 13px 0;
+    position: relative;
 }
 #normal{
     border-left: 0.5px black solid;
     border-right: 0.5px black solid;
+}
+img {
+    position: absolute;
+    height:40px;
+    right:0;
+    bottom:25px;
+    z-index: 2;
 }
 </style>

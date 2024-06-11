@@ -1,22 +1,17 @@
-const ExcelJS = require('exceljs');
 const minHeight = 5;
 
-module.exports = async function generateSpreadsheet(rides, total_pax, breakdown, file_data, imgBuffer){
+export async function generateSpreadsheet(rides, total_pax, breakdown, file_data){
     const template = new ExcelJS.Workbook();
     const workbook = new ExcelJS.Workbook();
 
     await template.xlsx.load(file_data)
 
-    const srcSheet = template.getWorksheet("Daily Report")
-    copyWorkSheet(srcSheet, workbook, "Daily Report"); 
-    
-    const logo = workbook.addImage({
-        buffer: imgBuffer,
-        extension: 'png',
+    const srcSheet = await template.getWorksheet("Daily Report")
+    workbook.addWorksheet("New");
+    const test = workbook.getWorksheet("New");
+    test.model = Object.assign(srcSheet.model, {
+        mergeCells: srcSheet.model.merges,
     });
-    let daily_report = workbook.getWorksheet("Daily Report");
-    daily_report.addImage(logo, 'Y1:AJ7');
-    
 
 
     const manifest = workbook.addWorksheet('Revised Manifest');
@@ -296,9 +291,6 @@ module.exports = async function generateSpreadsheet(rides, total_pax, breakdown,
 
     createOuterBorder(manifest, {row:4, col: "L"}, {row:23, col: "P"})
 
-    copyWorkSheet(template.getWorksheet("Data"), workbook, "Data"); 
-    copyWorkSheet(template.getWorksheet("Roll Call"), workbook, "Roll Call"); 
-
     return workbook.xlsx.writeBuffer();
 }
 
@@ -336,10 +328,3 @@ const createOuterBorder = (worksheet, start = {row: 1, col: "A"}, end = {row: 1,
         };
     }
 };
-
-const copyWorkSheet = (sheetToClone , destWorkbook, newSheetName) => {
-    let cloneSheet = destWorkbook.addWorksheet('Sheet');
-    cloneSheet.model = sheetToClone.model
-    sheetToClone.model.merges.forEach(merge => cloneSheet.mergeCells(merge));
-    cloneSheet.name = newSheetName
-}
