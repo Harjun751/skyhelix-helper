@@ -296,8 +296,8 @@ module.exports = async function generateSpreadsheet(rides, total_pax, breakdown,
 
     createOuterBorder(manifest, {row:4, col: "L"}, {row:23, col: "P"})
 
-    copyWorkSheet(template.getWorksheet("Data"), workbook, "Data"); 
-    copyWorkSheet(template.getWorksheet("Roll Call"), workbook, "Roll Call"); 
+    // copyWorkSheet(template.getWorksheet("Data"), workbook, "Data"); 
+    // copyWorkSheet(template.getWorksheet("Roll Call"), workbook, "Roll Call"); 
 
     return workbook.xlsx.writeBuffer();
 }
