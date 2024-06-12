@@ -59,8 +59,13 @@ export const useRideStore = defineStore('ride', () => {
     rides.value = json.rides;
     rideNum.value = json.rideNum;
     latest_liftoff.value = json.latest_liftoff;
+    if (json.total_pax!=null){
+      total_pax.value = Number(json.total_pax);
+    }
     total_pax.value = json.total_pax;
-    breakdown.value = json.breakdown;
+    if (json.breakdown!=null){
+      breakdown.value = json.breakdown;
+    }
   }
 
 
