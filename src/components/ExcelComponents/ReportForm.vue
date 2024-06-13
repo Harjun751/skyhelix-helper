@@ -6,10 +6,11 @@ const store = useExcelStore();
 <template>
     <form>
         <div id="am" class="parent">
+            <h2>AM</h2>
             <div id="legend">
                 <span class="name">Name</span>
-                <span class="clock">Clock-in</span>
-                <span class="clock">Clock-out</span>
+                <span class="clock">Clock in</span>
+                <span class="clock">Clock out</span>
                 <span class="clock">Break</span>
             </div>
             <div class="one">
@@ -42,6 +43,7 @@ const store = useExcelStore();
             </div>
         </div>
         <div id="mid" class="parent">
+            <h2>MID</h2>
             <div class="one">
                 <span>1.</span>
                 <input class="name" type="text" v-model="store.formData.m1n"/>
@@ -72,6 +74,7 @@ const store = useExcelStore();
             </div>
         </div>
         <div id="pm" class="parent">
+            <h2>PM</h2>
             <div class="one">
                 <span>1.</span>
                 <input class="name" type="text" v-model="store.formData.p1n"/>
@@ -110,6 +113,13 @@ form{
     width:90vw;
     margin-left: auto;
     margin-right: auto;
+    overflow-x:scroll;
+}
+.parent > div{
+    min-width:440px;
+}
+.parent{
+    overflow-x:scroll;
 }
 input{
     display: inline-block;
@@ -138,27 +148,15 @@ input:invalid {
     margin-bottom:20px;
     position: relative;
 }
-.parent::before{
-    position:absolute;
-    top:-12px;
-    color:white;
-    background-color: black;
-    padding:2px;
-    border: 1px solid var(--secondary-color);   
-    left:50%;
-    transform: translate(-50%,0);
-}
-#pm::before{
-    content:"PM";   
-}
-#am::before{
-    content:"AM";
-}
-#mid::before{
-    content:"MID"
-}
 #legend > span{
     display: inline-block;
     font-size: 100%;
+}
+h2{
+    color:white;
+    text-align: left;
+    margin-left:30px;
+    margin-top:1px;
+    margin-bottom:5px;
 }
 </style>
