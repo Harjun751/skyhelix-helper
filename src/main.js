@@ -27,6 +27,9 @@ watch(
         }));
         // localStorage.setItem("ridenum", JSON.stringify(state.ride.rideNum));
       }
+      if (state.excel){
+        localStorage.setItem("excel", JSON.stringify(state.excel));
+      }
     },
     { deep: true }
     );

@@ -1,7 +1,7 @@
 const ExcelJS = require('exceljs');
 const minHeight = 5;
 
-module.exports = async function generateSpreadsheet(rides, total_pax, breakdown, file_data, imgBuffer){
+module.exports = async function generateSpreadsheet(rides, total_pax, breakdown, file_data, imgBuffer, formData){
     const template = new ExcelJS.Workbook();
     const workbook = new ExcelJS.Workbook();
 
@@ -14,8 +14,60 @@ module.exports = async function generateSpreadsheet(rides, total_pax, breakdown,
         buffer: imgBuffer,
         extension: 'png',
     });
+
+    // daily report data
     let daily_report = workbook.getWorksheet("Daily Report");
     daily_report.addImage(logo, 'Y1:AJ7');
+    daily_report.getCell("F16").value = formData.a1n;
+    daily_report.getCell("AE16").value = formData.a1ci;
+    daily_report.getCell("AI16").value = formData.a1co;
+    daily_report.getCell("AM16").value = formData.a1b;
+    daily_report.getCell("F17").value = formData.a2n;
+    daily_report.getCell("AE17").value = formData.a2ci;
+    daily_report.getCell("AI17").value = formData.a2co;
+    daily_report.getCell("AM17").value = formData.a2b;
+    daily_report.getCell("F18").value = formData.a3n;
+    daily_report.getCell("AE18").value = formData.a3ci;
+    daily_report.getCell("AI18").value = formData.a3co;
+    daily_report.getCell("AM18").value = formData.a3b;
+    daily_report.getCell("F19").value = formData.a4n;
+    daily_report.getCell("AE19").value = formData.a4ci;
+    daily_report.getCell("AI19").value = formData.a4co;
+    daily_report.getCell("AM19").value = formData.a4b;
+
+    daily_report.getCell("F25").value = formData.m1n;
+    daily_report.getCell("AE25").value = formData.m1ci;
+    daily_report.getCell("AI25").value = formData.m1co;
+    daily_report.getCell("AM25").value = formData.m1b;
+    daily_report.getCell("F26").value = formData.m2n;
+    daily_report.getCell("AE26").value = formData.m2ci;
+    daily_report.getCell("AI26").value = formData.m2co;
+    daily_report.getCell("AM26").value = formData.m2b;
+    daily_report.getCell("F27").value = formData.m3n;
+    daily_report.getCell("AE27").value = formData.m3ci;
+    daily_report.getCell("AI27").value = formData.m3co;
+    daily_report.getCell("AM27").value = formData.m3b;
+    daily_report.getCell("F28").value = formData.m4n;
+    daily_report.getCell("AE28").value = formData.m4ci;
+    daily_report.getCell("AI28").value = formData.m4co;
+    daily_report.getCell("AM28").value = formData.m4b;
+
+    daily_report.getCell("F34").value = formData.p1n;
+    daily_report.getCell("AE34").value = formData.p1ci;
+    daily_report.getCell("AI34").value = formData.p1co;
+    daily_report.getCell("AM34").value = formData.p1b;
+    daily_report.getCell("F35").value = formData.p2n;
+    daily_report.getCell("AE35").value = formData.p2ci;
+    daily_report.getCell("AI35").value = formData.p2co;
+    daily_report.getCell("AM35").value = formData.p2b;
+    daily_report.getCell("F36").value = formData.p3n;
+    daily_report.getCell("AE36").value = formData.p3ci;
+    daily_report.getCell("AI36").value = formData.p3co;
+    daily_report.getCell("AM36").value = formData.p3b;
+    daily_report.getCell("F37").value = formData.p4n;
+    daily_report.getCell("AE37").value = formData.p4ci;
+    daily_report.getCell("AI37").value = formData.p4co;
+    daily_report.getCell("AM37").value = formData.p4b;
     
 
 
@@ -250,6 +302,7 @@ module.exports = async function generateSpreadsheet(rides, total_pax, breakdown,
     manifest.getCell("P4").border = {top: {style:'medium'}, bottom: {style:'thin'}, left: {style:'thin'}, right:{style:'thin'}};
 
     let the_only_nationalities = ["Singapore", "Malaysia", "Vietnam", "India", "Thailand", "China", "Europe", "Australia", "Korea", "Japan", "Indonesia", "Phillipines", "USA", "UK", "Taiwan", "HongKong", "Myanmar", "UAE"];
+    let num_kids = 0;
     for (let x = 0; x < the_only_nationalities.length; x++) {
         let curr_natl = the_only_nationalities[x];
         let row = x + 5;
@@ -271,6 +324,7 @@ module.exports = async function generateSpreadsheet(rides, total_pax, breakdown,
         if (breakdown[curr_natl] != null){
             adult.value = breakdown[curr_natl]["A"]
             child.value = breakdown[curr_natl]["K"]
+            num_kids+=child.value;
             elderly.value = 0;
             total.value = breakdown[curr_natl]["A"] + breakdown[curr_natl]["K"]
         } else {
@@ -285,11 +339,16 @@ module.exports = async function generateSpreadsheet(rides, total_pax, breakdown,
     manifest.getCell("L23").font = { bold: true }
     manifest.getCell("L23").border = {top: {style:'medium'}, bottom: {style:'medium'}, left: {style:'thin'}, right:{style:'thin'}};
     manifest.getCell("M23").border = {top: {style:'medium'}, bottom: {style:'medium'}, left: {style:'thin'}, right:{style:'thin'}};
-    manifest.getCell("M23").border = {top: {style:'medium'}, bottom: {style:'medium'}, left: {style:'thin'}, right:{style:'thin'}};
+    manifest.getCell("M23").value = total_pax - num_kids;
     manifest.getCell("N23").border = {top: {style:'medium'}, bottom: {style:'medium'}, left: {style:'thin'}, right:{style:'thin'}};
+    manifest.getCell("N23").value = num_kids;
     manifest.getCell("O23").border = {top: {style:'medium'}, bottom: {style:'medium'}, left: {style:'thin'}, right:{style:'thin'}};
+    manifest.getCell("O23").value = 0;
     manifest.getCell("P23").border = {top: {style:'medium'}, bottom: {style:'medium'}, left: {style:'thin'}, right:{style:'thin'}};
     manifest.getCell("P23").value = total_pax;
+    manifest.getCell("O23").alignment = { vertical: 'middle', horizontal: 'center'};
+    manifest.getCell("N23").alignment = { vertical: 'middle', horizontal: 'center'};
+    manifest.getCell("M23").alignment = { vertical: 'middle', horizontal: 'center'};
     manifest.getCell("P23").alignment = { vertical: 'middle', horizontal: 'center'};
     manifest.getCell("P23").font = { bold: true }
 
