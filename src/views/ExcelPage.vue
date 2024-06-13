@@ -1,7 +1,9 @@
 <script setup>
-import { useRideStore } from '@/stores/store';
+import { useRideStore, useExcelStore } from '@/stores/store';
+import ReportForm from '@/components/ExcelComponents/ReportForm.vue';
 
 const store = useRideStore();
+const formStore = useExcelStore();
 
 async function generateSheet() {
     // see if can refactor this
@@ -9,7 +11,7 @@ async function generateSheet() {
         res.arrayBuffer().then(data => {
             fetch("logo.png").then(res => {
                 res.arrayBuffer().then(imgData => {
-                    let generated = window.myBundle(store.rides, store.total_pax, store.breakdown, data, imgData);
+                    let generated = window.myBundle(store.rides, store.total_pax, store.breakdown, data, imgData, formStore.formData);
                     generated.then(async (result) => {
                         const blob = new Blob([result], { type: 'application/octet-stream' })
                         let date = new Date();
@@ -65,6 +67,12 @@ async function generateSheet() {
                 <span>Generate Excel Sheet (WIP)</span>
             </div>
         </button>
+        <ReportForm/>
+        <button id="clear" @click="formStore.resetForm">
+            <div>
+                <span>Clear form</span>
+            </div>
+        </button>
     </div>
     <div class="pax">
         Breakdown
@@ -114,16 +122,6 @@ button {
     box-shadow: 0px 5px rgba(0, 0, 0, 0.25);
 }
 
-form{
-    margin-top:40px;
-    color:white;
-    max-width: 350px;
-    text-align: left;
-    margin:auto;
-}
-form label{
-    margin-right:20px;
-}
 table {
     margin: auto;
     color: black;
@@ -149,6 +147,12 @@ tr:nth-child(even) {
 .pax {
     color: white;
     margin-top: 20px;
+}
+#clear{
+    width:50vw;
+    max-width:200px;
+    font-size:20px;
+    background-color: var(--red);
 }
 
 /* #generate > div > span {

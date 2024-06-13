@@ -54,6 +54,7 @@ export class Ride{
         this.seatplan = seatplan;
     }
 }
+const evenSets = [[1,2], [3,4], [5,6], [7,8], [9,10], [11,12], [13,14], [15,16]];
 
 function get_seat_variations(group, seats){
     let start = seats[0];
@@ -149,6 +150,7 @@ function get_seat_variations(group, seats){
         }
 
         // copy seats and create a set where this unoccupied slot is occupied
+        // see to refactoring this.
         let new_seats = structuredClone(seats);
         let crawler = new_seats[start.number - 1];
         for (let i = 0; i < group.size; i++){
@@ -180,6 +182,13 @@ function get_seat_variations(group, seats){
         if (short_count>0){
             // penalize short seatbelts
             score -= short_count;
+        }
+        if (group.size==2){
+            let set = [start.number, end.number];
+            if (evenSets.findIndex(x=> x[0]==set[0] && x[1]==set[1]) == -1){
+                // penalize doubles not sitting at even set
+                score -= 1;
+            }
         }
 
         variations.push([new_seats, score]);
