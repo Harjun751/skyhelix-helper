@@ -130,6 +130,6 @@ img {
     height:40px;
     right:0;
     bottom:25px;
-    z-index: 2;
+    z-index: 0;
 }
 </style>
