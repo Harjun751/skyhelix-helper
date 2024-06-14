@@ -88,7 +88,6 @@ function get_seat_variations(group, seats){
     if (end.isShort){
         short_count+=1;
     }
-    if (end)
     for (let i = 0; i < group.size - 1; i++){
         if (end.hasPartition){
             partitions_count+=1;
@@ -149,8 +148,6 @@ function get_seat_variations(group, seats){
             }
         }
 
-        // copy seats and create a set where this unoccupied slot is occupied
-        // see to refactoring this.
         let new_seats = structuredClone(seats);
         let crawler = new_seats[start.number - 1];
         for (let i = 0; i < group.size; i++){
@@ -164,16 +161,11 @@ function get_seat_variations(group, seats){
             // the more longer seatbelts the better - no bonus score for going over, though.
             score += long_count
         }
+
+        // these penalties make the algo run very long in worse-case scenarios
         if (long_count > group.plus_size){
             // penalty for using more longer seatbelts than required
             score -= (long_count-group.plus_size)
-        }
-        if (partitions_count<=best_partitions_count){
-            // add score to partitions based on best partitions.. should be 1 all the time anyway...
-            score += (best_partitions_count-partitions_count + 1);
-        } else {
-            // penalize partitions heavier if group size is lower
-            score -= (16-group.size)
         }
         if (poles_count>0){
             // penalize using the poled seats
@@ -182,6 +174,15 @@ function get_seat_variations(group, seats){
         if (short_count>0){
             // penalize short seatbelts
             score -= short_count;
+        }
+
+
+        if (partitions_count<=best_partitions_count){
+            // add score to partitions based on best partitions.. should be 1 all the time anyway...
+            score += (best_partitions_count-partitions_count + 1);
+        } else {
+            // penalize partitions heavier if group size is lower
+            score -= (16-group.size)
         }
         if (group.size==2){
             let set = [start.number, end.number];
@@ -206,6 +207,9 @@ function get_seat_variations(group, seats){
         if (start.long){
             long_count-=1;
         }
+        if (start.hasPole){
+            poles_count-=1;
+        }
         start = start.next;
         if (end.hasPartition){
             partitions_count+=1;
@@ -216,6 +220,9 @@ function get_seat_variations(group, seats){
         }
         if (end.occupied){
             occupied_count+=1;
+        }
+        if (end.hasPole){
+            poles_count+=1;
         }
     }
     return variations;
@@ -251,45 +258,44 @@ function getSeats(){
     seats[15].next = seats[0];
     return seats;
 }
-function brute_force(queue, variation, score, perfect_score){
-    if (queue.length == 0){
-        // base case
-        return [score, variation];
-    } else {
-        // recursive case
-        // get the next group and pop the queue
-        let group = queue[0];
-        queue.shift();
-        // set best score & variation
-        let best_score = score;
-        let best_variation = null;
 
-        // get all possible placements of this group
-        let possibilities = get_seat_variations(group, variation);
-        possibilities.sort(function(a, b) {
-            return b[1] - a[1]
-        })
-        for (let x = 0; x < possibilities.length; x++){
-            let variation = possibilities[x][0];
-            let var_score = possibilities[x][1];
-            // Recurse. Call brute force with each possible variation
-            let results = brute_force(queue.slice(), variation, (score + var_score), perfect_score);
-            // results will be the best variation of all sub-possiblities
-
-            // Compare results with current best score
-            let new_score = results[0];
-            // accept variation if it's better
-            if (new_score > best_score){
-                best_score = new_score;
-                best_variation = results[1];
-                if (best_score == perfect_score){
-                    console.log("Reached early termination!")
-                    return [best_score, best_variation]
-                }
+function iterative_bruteforce(perfect_score, heap){
+    let best = 0;
+    let best_seats = null;
+    let i = 0;
+    while (heap.size!=0){
+        // get the highest score variation from the heap
+        let next_best_var = heap.extractMax();
+        let seats = next_best_var[0];
+        let score = next_best_var[1];
+        let rem_groups = next_best_var[2];
+        if (rem_groups.length!=0){
+            let next_group = rem_groups.pop();
+            // calculate the next variations
+            let next_vars = get_seat_variations(next_group, seats.slice());
+            next_vars.map(x=> {x.push(rem_groups.slice()); x[1]=x[1]+score})
+            // insert the variations into the heap
+            next_vars.forEach(x => heap.insert(x));
+        } else {
+            // check termination criteria
+            if (score == perfect_score){
+                return seats;
+            } else if (score > best){
+                best_seats = seats;
+                best = score;
             }
         }
-        return [best_score, best_variation];
+        if (i==5000){
+            // 5000 iterations should be more than enough to get the best seats
+            // Due to the nature of the algo (using maxHeap), scores generally get lower and lower as time goes on
+            // In worst-case scenarios where the perfect score cannot be met, the algo runs forever
+            // in the worst-case of having 16 groups of 1, the permutations are twenty trillion. (16!)
+            // So, early terminate after 5000 iterations yields solid results
+            return best_seats;
+        }
+        i+=1;
     }
+    return best_seats;
 }
 
 function calculate_best_case(groups){
@@ -312,8 +318,9 @@ export function brute_force_seats(queue){
     let next_groups = get_groups(queue)[0];
     let groups = structuredClone(next_groups);
     let perfect_score = calculate_best_case(groups);
-    let bestseats = brute_force(next_groups, seats, 0, perfect_score);
-    bestseats = bestseats[1]
+    let heap = new MaxHeap();
+    heap.insert([seats, 0, next_groups]);
+    let bestseats = iterative_bruteforce(perfect_score, heap);
     allocate_seats(bestseats, groups)
     return [bestseats, groups];
 }
@@ -366,4 +373,64 @@ function allocate_seats(seats, groups){
         }
         crawler = crawler.next;
     }
+}
+
+
+// max PQ funcs
+const leftChild = (index) => index * 2 + 1;
+const rightChild = (index) => index * 2 + 1;
+const parent = (index) => Math.floor((index-1)/2);
+
+class MaxHeap{
+    constructor (){
+        this.heap = [];
+        this.size = 0;
+    }
+    swap = function (indexOne, indexTwo){
+        const tmp = this.heap[indexOne];
+        this.heap[indexOne] = this.heap[indexTwo];
+        this.heap[indexTwo] = tmp;
+    }
+    insert = function (element){
+        this.heap.push(element);
+        let index = this.heap.length - 1;
+        while (index!=0 && this.heap[index][1] > this.heap[parent(index)][1]){
+            this.swap(index, parent(index));
+            index = parent(index);
+        }
+        this.size += 1;
+    }
+    
+    extractMax = function () {
+        const root = this.heap.shift();
+        this.heap.unshift(this.heap[this.heap.length-1]);
+        this.heap.pop();
+        this.heapify(0);
+        this.size-=1;
+        return root;
+    }
+    
+    heapify = function(index) {
+        let left = leftChild(index);
+        let right = rightChild(index);
+        let smallest = index;
+      
+        // if the left child is bigger than the node we are looking at
+        if (left < this.heap.length && this.heap[smallest][1] < this.heap[left][1]) {
+          smallest = left;
+        }
+        
+        // if the right child is bigger than the node we are looking at
+        if (right < this.heap.length && this.heap[smallest][1] < this.heap[right][1]) {
+          smallest = right;
+        }
+        
+        // if the value of smallest has changed, then some swapping needs to be done
+        // and this method needs to be called again with the swapped element
+        if (smallest != index) {
+          this.swap(smallest, index);
+          this.heapify(smallest);
+        }
+      }
+
 }
