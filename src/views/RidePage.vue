@@ -30,6 +30,10 @@ function warning(){
         } 
     })
 }
+
+if (store.groups.length > 0){
+    generate();
+}
 </script>
 
 <template>
