@@ -89,7 +89,7 @@ if (store.groups.length > 0 && suspension.value==null){
 <template>
     <div class="container">
         <div v-if="rideStore.nextLanding" id="iBtn">i</div>
-        <div style="color:white" v-if="rideStore.nextLanding" class="landing">
+        <div style="color:var(--font-color-white);" v-if="rideStore.nextLanding" class="landing">
             <div>
                 Ride touches down <span class="label">~{{ rideStore.nextLanding }}</span>
             </div>
@@ -150,7 +150,7 @@ button{
 .delete{
     margin: 50px auto 180px auto;
     /* color: var(--font-color-white); */
-    background-color: var(--red);
+    background-color: var(--negative);
     font-size:18px;
     width:160px;
 }

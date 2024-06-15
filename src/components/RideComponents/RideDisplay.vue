@@ -103,7 +103,7 @@ const formattedTime = computed(() => {
     bottom: 1px;
 }
 .label.pending{
-    background-color: var(--red);
+    background-color: var(--negative);
 }
 p{
     margin-top:5px;

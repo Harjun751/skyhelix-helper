@@ -1,23 +1,29 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import { ref } from 'vue';
-import { watch } from 'vue'
 import QLogo from './components/QLogo.vue';
 import HelixLogo from './components/HelixLogo.vue';
-import image from "@/assets/excel-twotone.png";
-
-const darkmode = ref(true);
-watch(() => darkmode.value, (newVal) => {
-  if (newVal) {
-    document.documentElement.setAttribute('data-theme', 'dark');
-  } else {
-    document.documentElement.setAttribute('data-theme', 'light');
-  }
-})
+import CogLogo from './components/CogLogo.vue';
+import ExcelLogo from './components/ExcelLogo.vue';
+import { usePrefStore } from "@/stores/store"
+const store = usePrefStore();
+const theme = store.theme;
+if (theme == "blue"){
+    document.documentElement.setAttribute('data-theme', 'blue');    
+} else if (theme == "purple"){
+    document.documentElement.setAttribute('data-theme', 'purple');
+} else if (theme == "black"){
+    document.documentElement.setAttribute('data-theme', 'black');
+} else if (theme == "peach"){
+    document.documentElement.setAttribute('data-theme', 'peach');
+} else if (theme == "rainbow"){
+    document.documentElement.setAttribute('data-theme', 'rainbow');
+}
+else if (theme == "red"){
+    document.documentElement.setAttribute('data-theme', 'red');
+}
 </script>
 
 <template>
-  <!-- <button @click="darkmode = !darkmode">Toggle dark mode</button> -->
   <RouterView />
   <footer>
     <div class="queue">
@@ -58,12 +64,28 @@ watch(() => darkmode.value, (newVal) => {
           <tr>
             <td>
               <div class="logoContainer">
-                <img :src="image">
+                <ExcelLogo/>
               </div>
             </td>
           </tr>
           <tr class="text">
             <td><span>Excel</span></td>
+          </tr>
+        </table>
+      </RouterLink>
+    </div>
+    <div class="settings">
+      <RouterLink to="/settings">
+        <table>
+          <tr>
+            <td>
+              <div class="logoContainer">
+                <CogLogo />
+              </div>
+            </td>
+          </tr>
+          <tr class="text">
+            <td><span>Settings</span></td>
           </tr>
         </table>
       </RouterLink>

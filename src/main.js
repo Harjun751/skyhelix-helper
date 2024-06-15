@@ -30,6 +30,9 @@ watch(
       if (state.excel){
         localStorage.setItem("excel", JSON.stringify(state.excel));
       }
+      if (state.user){
+        localStorage.setItem("user", JSON.stringify(state.user));
+      }
     },
     { deep: true }
     );

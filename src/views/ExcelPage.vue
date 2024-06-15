@@ -145,7 +145,7 @@ tr:nth-child(even) {
 }
 
 .pax {
-    color: white;
+    color:var(--font-color-white);
     margin-top: 20px;
     margin-bottom:100px;
 }
@@ -153,7 +153,7 @@ tr:nth-child(even) {
     width:50vw;
     max-width:200px;
     font-size:20px;
-    background-color: var(--red);
+    background-color: var(--negative);
 }
 
 /* #generate > div > span {

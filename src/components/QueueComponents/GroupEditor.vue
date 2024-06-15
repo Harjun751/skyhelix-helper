@@ -90,7 +90,7 @@ let natl = ref(default_natl);
 }
 .num{
     background:none;
-    color:white;
+    color:var(--font-color-white);
     width:38px;
     height: 42px;
     font-size: 24px;
@@ -107,7 +107,7 @@ let natl = ref(default_natl);
 .minus, .plus{
     display: inline-block;
     position: relative;
-    color: white;
+    color:var(--font-color-white);
     font-size: 31px;
     font-weight: bold;
     line-height: 42px;
@@ -139,7 +139,7 @@ let natl = ref(default_natl);
     width: 117px;
     height:42px;
     border-radius:5px;
-    background: #6C5641;
+    background: var(--secondary-color-darker);
     display:inline-block;
     z-index: -1;
 }
@@ -147,7 +147,7 @@ let natl = ref(default_natl);
     background: #792D2E;
 }
 #delete{
-    background-color: var(--red);
+    background-color: var(--negative);
 }
 .submit > .btnwrapper.update{
     margin-left:15px;

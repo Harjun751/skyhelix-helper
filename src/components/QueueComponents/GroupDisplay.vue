@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import GroupEditor from '@/components/QueueComponents/GroupEditor.vue'
-import image from "@/assets/draggable.png"
+import Draggable from '@/components/Draggable.vue';
+
 const props = defineProps(['group', 'number'])
 let editing = ref(false);
 </script>
@@ -25,7 +26,7 @@ let editing = ref(false);
                 <div id="child" class="hero">
                     <span>Child</span>
                     <p>{{ group.kids }}</p>
-                    <img :src="image"/>
+                    <Draggable class="handle" />
                 </div>
             </div>
             <div id="editor" v-else>
@@ -125,9 +126,9 @@ let editing = ref(false);
     border-left: 0.5px black solid;
     border-right: 0.5px black solid;
 }
-img {
+.handle {
     position: absolute;
-    height:40px;
+    height:50px;
     right:0;
     bottom:25px;
     z-index: 0;

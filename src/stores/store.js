@@ -3,6 +3,22 @@ import { defineStore } from 'pinia'
 import { computed } from 'vue'
 import { Group, Ride, SuspensionStart, SuspensionEnd } from '@/algo'
 
+
+export const usePrefStore = defineStore('user', () => {
+  const default_option = ref("India");
+  const theme = ref("blue");
+  const seat_config = ref({});
+
+  if (localStorage.getItem("user")) {
+    let json = JSON.parse(localStorage.getItem("user"))
+    default_option.value = json.default_option;
+    theme.value = json.theme;
+    seat_config.value = json.seat_config;
+  }
+
+  return { default_option, theme, seat_config }
+})
+
 export const useQueueStore = defineStore('queue', () => {
   const groups = ref([]);
   const id = ref(1);

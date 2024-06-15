@@ -164,7 +164,7 @@ table {
   width: 75vw;
   margin: auto;
   font-size:23px;
-  color: white;
+  color:var(--font-color-white);
 }
 .seat{
   background-color: #D9D9D9;
@@ -204,10 +204,10 @@ th {
   text-align: right;
 }
 .summary{
-  color:white;
+  color:var(--font-color-white);
 }
 .info{
-  color:white;
+  color:var(--font-color-white);
   margin-top:30px;
 }
 </style>
@@ -234,7 +234,7 @@ th {
   margin-left:20px;
   display: inline-block;
   height: 18px;
-  color:white;
+  color:var(--font-color-white);
   font-size:18px;
 }
 </style>

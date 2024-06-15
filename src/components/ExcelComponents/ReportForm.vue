@@ -139,7 +139,7 @@ input:invalid {
 }
 .parent > div > span{
     margin-right:3px;
-    color:white;
+    color:var(--font-color-white);
 }
 .parent{
     border-radius:5px;
@@ -153,7 +153,7 @@ input:invalid {
     font-size: 100%;
 }
 h2{
-    color:white;
+    color:var(--font-color-white);
     text-align: left;
     margin-left:30px;
     margin-top:1px;

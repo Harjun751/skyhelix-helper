@@ -6,13 +6,12 @@
 ### Clicker?
 
 ### Rides
-- Early termination
-- Editing of the ride?
-- Manual generation?
+- Editing of the ride? < cconsider the necessity of this. Maybe an undo ride button would fare better?
 
 ### Setting page
 - theme
 - default options
+- seat config
 
 ## Styles/UX
 
