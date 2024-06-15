@@ -97,10 +97,10 @@ const formattedTime = computed(() => {
     background-color: var(--secondary-color);
     padding:5px 20px;
     border-radius: 5px;
-    font-size:10px;
+    font-size:12px;
     margin-left:10px;
     position: relative;
-    bottom: 2px;
+    bottom: 1px;
 }
 .label.pending{
     background-color: var(--red);
@@ -111,7 +111,7 @@ p{
 button{
     margin-top:30px !important;
     margin:auto;
-    height:30px;
+    height:50px;
     width: 80%;
     background-color: var(--secondary-color);
     padding: 0;
@@ -119,5 +119,7 @@ button{
     font-size: 15px;
     margin-bottom:20px;
     border-radius: 5px;
+    line-height: 20px;
+    font-size:20px;
 }
 </style>

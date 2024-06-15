@@ -3,10 +3,30 @@ import RideDisplay from '@/components/RideComponents/RideDisplay.vue'
 import { brute_force_seats  } from '@/algo';
 import { useQueueStore, useRideStore } from '@/stores/store'
 import image from "@/assets/create.png";
+import resume from "@/assets/resume.png";
 import Swal from 'sweetalert2';
+import { toRef, watch } from 'vue';
 
 const store = useQueueStore();
 const rideStore = useRideStore();
+const suspension = toRef(rideStore.isSuspended);
+
+function formatTime(time){
+    let date = new Date(time);
+    let hours = date.getHours();
+    if (hours < 10){
+        hours = "0" + hours;
+    }
+    let minutes = date.getMinutes();
+    if (minutes < 10){
+        minutes = "0" + minutes;
+    }
+    return String(hours)+String(minutes);
+}
+
+watch(() => rideStore.isSuspended, (newVal) => {
+    suspension.value = newVal
+})
 
 function generate(){
     let data = JSON.parse(
@@ -31,7 +51,37 @@ function warning(){
     })
 }
 
-if (store.groups.length > 0){
+function suspend(){
+    Swal.fire({
+      title: 'AYO CHILL',
+      text: 'Suspend the ride?',
+      icon: 'error',
+      showCancelButton: true,
+      confirmButtonText: 'yea!',
+      cancelButtonText: 'nope!'
+    }).then((result) => {
+        if (result.isConfirmed){
+            rideStore.suspendRide();
+        } 
+    })
+}
+
+function unSuspend(){
+    Swal.fire({
+      title: 'AYO CHILL',
+      text: 'Unsuspend the ride?',
+      icon: 'error',
+      showCancelButton: true,
+      confirmButtonText: 'yea!',
+      cancelButtonText: 'nope!'
+    }).then((result) => {
+        if (result.isConfirmed){
+            rideStore.unSuspend();
+        } 
+    })
+}
+
+if (store.groups.length > 0 && suspension.value==null){
     generate();
 }
 </script>
@@ -45,10 +95,23 @@ if (store.groups.length > 0){
             </div>
         </div>
         <div v-for="(ride,index) in rideStore.rides.slice().reverse()" :key="ride.number">
-            <RideDisplay :ride="ride" :toExpand="index==0 && ride.state==0 ? true : false" />
+            <RideDisplay v-if="ride.state!=null" :ride="ride" :toExpand="index==0 && ride.state==0 ? true : false" />
+            <div class="suspensionInfo" v-else-if="ride.start!=null">
+                Suspension started @ <span class="slabel">{{ formatTime(ride.start) }}</span>
+            </div>
+            <div class="suspensionInfo" v-else-if="ride.end!=null">
+                Suspension ended @ <span class="slabel">{{  formatTime(ride.end) }}</span>
+            </div>
         </div>
+        <button v-if="suspension==null" class="suspend" @click="suspend()">Suspend Ride</button>
+        <button v-else class="suspend floaty" @click="unSuspend()">
+            <div>
+                <img :src=resume />
+                <span>Resume Operations</span>
+            </div>
+        </button>
         <button class="delete" @click="warning()">Delete all rides</button>
-        <button id="generate" @click="generate()">
+        <button v-if="suspension==null" id="generate" class="floaty" @click="generate()">
             <div>
                 <img :src=image />
                 <span>Generate next ride</span>
@@ -91,7 +154,7 @@ button{
     font-size:18px;
     width:160px;
 }
-#generate{
+.floaty{
     background-color: var(--secondary-color);
     position: fixed;
     bottom: 100px;
@@ -99,11 +162,12 @@ button{
     z-index: 1;
     box-shadow: 0px 5px rgba(0,0,0, 0.25);
 }
-#generate > div > span {
+.floaty > div > span {
     vertical-align: middle;
     margin-left:10px;
+    font-size:23px;
 }
-#generate > div > img {
+.floaty > div > img {
     width:40px;
     height:40px;
     vertical-align: middle;
@@ -133,5 +197,37 @@ button{
     transform: translateX(-50%);
     width:85vw;
   }
+}
+.suspensionInfo{
+    margin: auto;
+    width:80vw;
+    border-radius:13px;
+    border: 1px solid var(--secondary-color);
+    margin-top:20px;
+    color: var(--font-color-white);
+    padding-left:30px;
+    text-align: left;
+    font-size: 20px;
+    line-height:35.5px;
+}
+.suspensionInfo > .slabel{
+    font-family: "Inter", sans-serif;
+    color: var(--font-color-dark);
+    background-color: var(--secondary-color);
+    padding:5px 20px;
+    border-radius: 5px;
+    font-size:12px;
+    margin-left:10px;
+    position: relative;
+    bottom: 1px;
+}
+
+.suspend{
+    margin: 50px auto 0px auto;
+    font-size:18px;
+}
+.suspend.floaty > div > img{
+    width:30px;
+    height:30px;
 }
 </style>

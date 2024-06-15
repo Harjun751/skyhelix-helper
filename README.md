@@ -6,7 +6,6 @@
 ### Clicker?
 
 ### Rides
-- Suspending rides
 - Early termination
 - Editing of the ride?
 - Manual generation?

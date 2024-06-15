@@ -47,6 +47,20 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],2:[function(require,module,exports){
+function formatTime(time){
+    let date = new Date(time);
+    let hours = date.getHours();
+    if (hours < 10){
+        hours = "0" + hours;
+    }
+    let minutes = date.getMinutes();
+    if (minutes < 10){
+        minutes = "0" + minutes;
+    }
+    return String(hours)+String(minutes);
+}
+
+
 const ExcelJS = require('exceljs');
 const minHeight = 5;
 
@@ -248,78 +262,89 @@ module.exports = async function generateSpreadsheet(rides, total_pax, breakdown,
     for (let x = 0; x < rides.length; x++){
         let start_row = row;
         let ride = rides[x];
-        manifest.getCell(`A${row}`).value = `Ride ${ride.number}`
-        let rideHeight = Math.max(ride.groups.length, minHeight);
-
-        // merge the required cells and align
-        manifest.mergeCells(`A${row}:A${row + rideHeight - 1}`);
-        manifest.getCell(`A${row}`).alignment= { vertical: "middle", horizontal: "center" }
-        manifest.mergeCells(`E${row}:E${row + rideHeight - 1}`);
-        let boardingTime = manifest.getCell(`E${row}`);
-        let date = new Date(ride.liftoff);
-        let timeString = date.toLocaleTimeString([], {hourCycle:'h23', hour: '2-digit', minute:'2-digit'})
-        boardingTime.value = timeString;
-        boardingTime.alignment = { vertical: "middle", horizontal: "center" }
-        manifest.mergeCells(`I${row}:I${row + rideHeight - 1}`);
-        manifest.getCell(`I${row}`).alignment= { vertical: "middle", horizontal: "center" }
-
-        let nationalities = { }
-        for (let y = 0; y < ride.groups.length; y++){
-            let group = ride.groups[y];
-            if (nationalities[group.nationality] == null){
-                nationalities[group.nationality] = { "K": group.kids, "A": group.plus_size + group.normal}
-            } else {
-                nationalities[group.nationality]["K"] = nationalities[group.nationality]["K"] + group.kids;
-                nationalities[group.nationality]["A"] = nationalities[group.nationality]["A"] + group.plus_size + group.normal;
-            }
-        }
-
-        for (const [natl, values] of Object.entries(nationalities)){
-            manifest.getCell(`B${row}`).value = values["A"];
-            manifest.getCell(`B${row}`).alignment = { vertical: 'middle', horizontal: 'center' };
-            if (values["K"] > 0){
-                manifest.getCell(`C${row}`).value = values["K"];
-                manifest.getCell(`C${row}`).alignment = { vertical: 'middle', horizontal: 'center' };
-            }
-            manifest.getCell(`G${row}`).value = natl;
-            manifest.getCell(`G${row}`).alignment = { vertical: 'middle', horizontal: 'center' };
-            manifest.getCell(`H${row}`).value = values["A"] + values["K"];
-            manifest.getCell(`H${row}`).alignment = { vertical: 'middle', horizontal: 'center' };
-            row += 1;
-        }
-        
-        manifest.addConditionalFormatting({
-            ref: `B${start_row}:D${start_row+rideHeight-1}`,
-            rules:[
-                {
-                    type: 'containsText',
-                    operator: 'containsBlanks',
-                    style: {fill: {type: 'pattern', pattern: 'lightGrid', bgColor: {argb: 'FF0101'}, fgColor: {argb: "A5A5A5"}}}
+        if (ride.state!=null){
+            manifest.getCell(`A${row}`).value = `Ride ${ride.number}`
+            let rideHeight = Math.max(ride.groups.length, minHeight);
+    
+            // merge the required cells and align
+            manifest.mergeCells(`A${row}:A${row + rideHeight - 1}`);
+            manifest.getCell(`A${row}`).alignment= { vertical: "middle", horizontal: "center" }
+            manifest.mergeCells(`E${row}:E${row + rideHeight - 1}`);
+            let boardingTime = manifest.getCell(`E${row}`);
+            let date = new Date(ride.liftoff);
+            let timeString = date.toLocaleTimeString([], {hourCycle:'h23', hour: '2-digit', minute:'2-digit'})
+            boardingTime.value = timeString;
+            boardingTime.alignment = { vertical: "middle", horizontal: "center" }
+            manifest.mergeCells(`I${row}:I${row + rideHeight - 1}`);
+            manifest.getCell(`I${row}`).alignment= { vertical: "middle", horizontal: "center" }
+    
+            let nationalities = { }
+            for (let y = 0; y < ride.groups.length; y++){
+                let group = ride.groups[y];
+                if (nationalities[group.nationality] == null){
+                    nationalities[group.nationality] = { "K": group.kids, "A": group.plus_size + group.normal}
+                } else {
+                    nationalities[group.nationality]["K"] = nationalities[group.nationality]["K"] + group.kids;
+                    nationalities[group.nationality]["A"] = nationalities[group.nationality]["A"] + group.plus_size + group.normal;
                 }
-            ]
-        })
-        manifest.addConditionalFormatting({
-            ref: `G3:G3`,
-            rules:[
-                {
-                    type: 'containsText',
-                    operator: 'containsBlanks',
-                    style: {fill: {type: 'pattern', pattern: 'lightGrid', bgColor: {argb: 'FF0101'}, fgColor: {argb: "EBF1DE"}}}
-                }
-            ]
-        })
-
-        let letters = "ABCDEFGHIJ".split('');
-        let max = Math.max(minHeight, start_row+rideHeight);
-        for (let x = 0; x < letters.length; x++){
-            for (let counter = start_row; counter < max; counter++){
-                let coords = letters[x] + counter;
-                manifest.getCell(coords).border = {top:{style:'thin'}, bottom:{style:'thin'}, left:{style:'thin'}, right:{style:'thin'}};
             }
+    
+            for (const [natl, values] of Object.entries(nationalities)){
+                manifest.getCell(`B${row}`).value = values["A"];
+                manifest.getCell(`B${row}`).alignment = { vertical: 'middle', horizontal: 'center' };
+                if (values["K"] > 0){
+                    manifest.getCell(`C${row}`).value = values["K"];
+                    manifest.getCell(`C${row}`).alignment = { vertical: 'middle', horizontal: 'center' };
+                }
+                manifest.getCell(`G${row}`).value = natl;
+                manifest.getCell(`G${row}`).alignment = { vertical: 'middle', horizontal: 'center' };
+                manifest.getCell(`H${row}`).value = values["A"] + values["K"];
+                manifest.getCell(`H${row}`).alignment = { vertical: 'middle', horizontal: 'center' };
+                row += 1;
+            }
+            
+            manifest.addConditionalFormatting({
+                ref: `B${start_row}:D${start_row+rideHeight-1}`,
+                rules:[
+                    {
+                        type: 'containsText',
+                        operator: 'containsBlanks',
+                        style: {fill: {type: 'pattern', pattern: 'lightGrid', bgColor: {argb: 'FF0101'}, fgColor: {argb: "A5A5A5"}}}
+                    }
+                ]
+            })
+            manifest.addConditionalFormatting({
+                ref: `G3:G3`,
+                rules:[
+                    {
+                        type: 'containsText',
+                        operator: 'containsBlanks',
+                        style: {fill: {type: 'pattern', pattern: 'lightGrid', bgColor: {argb: 'FF0101'}, fgColor: {argb: "EBF1DE"}}}
+                    }
+                ]
+            })
+    
+            let letters = "ABCDEFGHIJ".split('');
+            let max = Math.max(minHeight, start_row+rideHeight);
+            for (let x = 0; x < letters.length; x++){
+                for (let counter = start_row; counter < max; counter++){
+                    let coords = letters[x] + counter;
+                    manifest.getCell(coords).border = {top:{style:'thin'}, bottom:{style:'thin'}, left:{style:'thin'}, right:{style:'thin'}};
+                }
+            }
+    
+            createOuterBorder(manifest, {row:start_row, col: "A"}, {row:start_row+rideHeight-1, col: "J"})
+            row = start_row + rideHeight;
+        } else if (ride.start!=null){
+            // this is a suspension event. update data in previous row
+            let time = formatTime(ride.start);
+            manifest.getCell(`I${row-1}`).value = `Ride Suspended @ ${time} due to [FILL IN REASON HERE]`
+            manifest.getCell(`I${row-1}`).alignment = { wrapText:true, vertical:"middle", horizontal:"center" }
+        } else if (ride.end!=null){
+            let time = formatTime(ride.end);
+            manifest.getCell(`I${row}`).value = `Ride Resumed @ ${time}`
+            manifest.getCell(`I${row}`).alignment = { wrapText:true, vertical:"middle", horizontal:"center" }
         }
-
-        createOuterBorder(manifest, {row:start_row, col: "A"}, {row:start_row+rideHeight-1, col: "J"})
-        row = start_row + rideHeight;
     }
 
 

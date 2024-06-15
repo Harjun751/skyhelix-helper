@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { computed } from 'vue'
-import { Group, Ride } from '@/algo'
+import { Group, Ride, SuspensionStart, SuspensionEnd } from '@/algo'
 
 export const useQueueStore = defineStore('queue', () => {
   const groups = ref([]);
@@ -52,6 +52,7 @@ export const useRideStore = defineStore('ride', () => {
   const rideNum = ref(1);
   const total_pax = ref(0);
   const breakdown = ref({});
+  const isSuspended = ref(null);
 
 
   if (localStorage.getItem("rides")) {
@@ -59,6 +60,7 @@ export const useRideStore = defineStore('ride', () => {
     rides.value = json.rides;
     rideNum.value = json.rideNum;
     latest_liftoff.value = json.latest_liftoff;
+    isSuspended.value = json.isSuspended;
     if (json.total_pax!=null){
       total_pax.value = Number(json.total_pax);
     }
@@ -112,6 +114,25 @@ export const useRideStore = defineStore('ride', () => {
     rideNum.value = 1;
     breakdown.value = { };
     total_pax.value = 0;
+    isSuspended.value = null;
+  }
+
+  function suspendRide(){
+    let start = new Date();
+    let suspension = new SuspensionStart(start);
+    if (rides.value[rides.value.length - 1].state == 0){
+      rides.value.pop();
+    }
+    rides.value.push(suspension);
+    isSuspended.value = suspension;
+    // remove all pending rides
+  }
+
+  function unSuspend(){
+    let end = new Date();
+    let endSuspension = new SuspensionEnd(end);
+    rides.value.push(endSuspension);
+    isSuspended.value = null;
   }
 
   const nextLanding = computed(() => {
@@ -133,7 +154,7 @@ export const useRideStore = defineStore('ride', () => {
     return null
   })
 
-  return { rides, liftoff, addRide, rideNum, nextLanding, deleteRides, latest_liftoff, total_pax, breakdown }
+  return { rides, liftoff, addRide, rideNum, nextLanding, deleteRides, latest_liftoff, total_pax, breakdown, suspendRide, unSuspend, isSuspended }
 })
 
 

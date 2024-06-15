@@ -1,25 +1,3 @@
-function get_groups(queue){
-    let avail_seats = 16
-    let next_groups = []
-    for (let x = 0; x < queue.length; x++){
-        let group_size = queue[x].size
-        if (avail_seats - group_size >= 0){
-            next_groups.push(queue[x])
-            avail_seats -= group_size
-        }
-    }
-    let average_gap = Math.floor(avail_seats/next_groups.length)
-    next_groups.sort(function(a, b) {
-        return b[0] - a[0]
-    })
-    // [groups, avail_gaps, avg_gaps]
-    return [next_groups, avail_seats, average_gap]
-}
-
-
-
-
-
 export class Group {
     constructor(plus_size, normal, kids, nationality, id){
         this.plus_size = plus_size;
@@ -54,6 +32,37 @@ export class Ride{
         this.seatplan = seatplan;
     }
 }
+
+export class SuspensionStart{
+    constructor(start){
+        this.start = start;
+    }
+}
+export class SuspensionEnd{
+    constructor(end){
+        this.end = end;
+    }
+}
+
+
+function get_groups(queue){
+    let avail_seats = 16
+    let next_groups = []
+    for (let x = 0; x < queue.length; x++){
+        let group_size = queue[x].size
+        if (avail_seats - group_size >= 0){
+            next_groups.push(queue[x])
+            avail_seats -= group_size
+        }
+    }
+    let average_gap = Math.floor(avail_seats/next_groups.length)
+    next_groups.sort(function(a, b) {
+        return b[0] - a[0]
+    })
+    // [groups, avail_gaps, avg_gaps]
+    return [next_groups, avail_seats, average_gap]
+}
+
 const evenSets = [[1,2], [3,4], [5,6], [7,8], [9,10], [11,12], [13,14], [15,16]];
 
 function get_seat_variations(group, seats){
