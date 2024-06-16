@@ -41,6 +41,9 @@
   --bg-opacity: 0.5;
   --footer-opacity: 0.5;
 }
+[data-theme="peach"] .plus, [data-theme="peach"] .minus, [data-theme="peach"] .label{
+  text-shadow: none !important;
+}
 
 [data-theme="red"] {
   --primary-color: #c60721;
@@ -99,3 +102,11 @@ body
   -webkit-tap-highlight-color: transparent;
 }
 html{overscroll-behavior-y: contain;}
+
+.swal2-cancel{
+  background-color: var(--secondary-color) !important;
+  color:var(--font-color-dark) !important;
+}
+.swal2-confirm{
+  background-color: #444444 !important;
+}

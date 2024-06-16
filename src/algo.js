@@ -182,6 +182,7 @@ function get_seat_variations(group, seats){
         }
         if (short_count>0){
             // penalize short seatbelts
+            console.log(short_count + " many short!")
             score -= short_count;
         }
         if (partitions_count<=best_partitions_count){
@@ -217,6 +218,9 @@ function get_seat_variations(group, seats){
         if (start.hasPole){
             poles_count-=1;
         }
+        if (start.isShort){
+            short_count-=1;
+        }
         start = start.next;
         if (end.hasPartition){
             partitions_count+=1;
@@ -231,17 +235,25 @@ function get_seat_variations(group, seats){
         if (end.hasPole){
             poles_count+=1;
         }
+        if (end.isShort){
+            short_count+=1;
+        }
     }
     return variations;
 }
-
+import { usePrefStore } from "./stores/store";
 function getSeats(){
+    const config = usePrefStore().seat_config;
     let seats = []
     let previous = null;
     for (let i = 1; i < 17; i++){
+
         let isLong = false;
-        if (i==5 || i==6 || i==10 || i == 15){
-            isLong = true
+        let isShort = false;
+        if (config[i] == "Long"){
+            isLong = true;
+        } else if (config[i] == "Short"){
+            isShort = true;
         }
         let hasPartition = false;
         if (i==4 || i==8 || i==12 || i == 16){
@@ -251,13 +263,13 @@ function getSeats(){
         if (i==5 || i == 16){
             hasPole = true;
         }
-        let isShort = false;
-        if (i==16 || i==14 || i==13){
-            isShort = true;
-        }
         let seat = new Seat(i, null, false, isLong, hasPartition, hasPole, isShort)
         if (previous!=null){
             previous.next = seat;
+        }
+        if (config[i] == "broken"){
+            seat.groupid = -10;
+            seat.occupied = true;
         }
         seats.push(seat)
         previous = seat;
@@ -341,6 +353,9 @@ function allocate_seats(seats, groups){
     for (let x = 0; x < 16; x++){
         if (!crawler.occupied){
             crawler = crawler.next;
+            continue;
+        } else if (crawler.groupid==-10){
+            crawler.occupant = "X";
             continue;
         }
         // get group

@@ -9,9 +9,8 @@
 - Editing of the ride? < cconsider the necessity of this. Maybe an undo ride button would fare better?
 
 ### Setting page
-- theme
-- default options
-- seat config
+- seat config < Save button
+- roll call
 
 ## Styles/UX
 

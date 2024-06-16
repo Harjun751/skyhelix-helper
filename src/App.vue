@@ -103,8 +103,7 @@ footer {
   background-color: var(--footer-color);
   height: 75px;
   display: flex;
-  justify-content: space-between;
-  padding:0px 40px;
+  justify-content: space-around;
 }
 footer > div{
   padding-top:3px;

@@ -128,8 +128,8 @@ let editing = ref(false);
 }
 .handle {
     position: absolute;
-    height:50px;
-    right:0;
+    height:40px;
+    right:-13px;
     bottom:25px;
     z-index: 0;
 }

@@ -7,7 +7,24 @@ import { Group, Ride, SuspensionStart, SuspensionEnd } from '@/algo'
 export const usePrefStore = defineStore('user', () => {
   const default_option = ref("India");
   const theme = ref("blue");
-  const seat_config = ref({});
+  const seat_config = ref({ 
+    1: 'Normal',
+    2: 'Normal',
+    3: 'Normal',
+    4: 'Normal',
+    5: 'Long',
+    6: 'Long',
+    7: 'Normal',
+    8: 'Normal',
+    9: 'Normal',
+    10: 'Long',
+    11: 'Normal',
+    12: 'Normal',
+    13: 'Short',
+    14: 'Short',
+    15: 'Long',
+    16: 'Short',
+  })
 
   if (localStorage.getItem("user")) {
     let json = JSON.parse(localStorage.getItem("user"))

@@ -37,6 +37,10 @@ function updateTable(seatplan){
       let ele = table.getElementsByClassName(String(number))[0];
 
       let groupid = seatplan[x].groupid;
+      if (groupid==-10){
+        ele.textContent="X";
+        continue;
+      }
       let groupNumber = dict[groupid];
       if (groupNumber == null) {
         groupNumber = groups.findIndex(x => x.id == groupid);

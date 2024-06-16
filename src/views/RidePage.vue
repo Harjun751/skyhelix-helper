@@ -53,7 +53,7 @@ function warning(){
 
 function suspend(){
     Swal.fire({
-      title: 'AYO CHILL',
+      title: 'CALM DOWN',
       text: 'Suspend the ride?',
       icon: 'error',
       showCancelButton: true,
@@ -68,8 +68,8 @@ function suspend(){
 
 function unSuspend(){
     Swal.fire({
-      title: 'AYO CHILL',
-      text: 'Unsuspend the ride?',
+      title: ':(',
+      text: 'Resume operations?',
       icon: 'error',
       showCancelButton: true,
       confirmButtonText: 'yea!',
