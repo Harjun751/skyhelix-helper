@@ -31,7 +31,10 @@ watch(
         localStorage.setItem("excel", JSON.stringify(state.excel));
       }
       if (state.user){
-        localStorage.setItem("user", JSON.stringify(state.user));
+        localStorage.setItem("user", JSON.stringify(state.user, function replacer(key, value){
+          var blocklist = ["roll_call"]
+          return blocklist.indexOf(key) === -1 ? value : undefined
+        }));
       }
     },
     { deep: true }

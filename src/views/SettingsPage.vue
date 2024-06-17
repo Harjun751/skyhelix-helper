@@ -1,10 +1,14 @@
 <script setup>
 import { usePrefStore } from "@/stores/store"
-import { watch } from 'vue';
+import { ref, watch } from 'vue';
 import Swal from 'sweetalert2';
 
 const store = usePrefStore();
 const data = Object.assign({}, store.seat_config);
+
+const name = ref("");
+const staffid = ref();
+const type = ref("MRE");
 
 watch(() => store.theme, (newVal) => {
     if (newVal == "blue"){
@@ -36,9 +40,15 @@ function saveConfig(){
             store.seat_config = data;
         } 
     })
-
-
     store.seat_config = data;
+}
+
+function addEmployee(){
+    store.addEmployee(name.value, staffid.value, type.value);
+}
+
+function deleteEmployee(id){
+    store.deleteEmployee(id);
 }
 </script>
 
@@ -91,8 +101,34 @@ function saveConfig(){
         </div>
         <button @click="saveConfig">Save seat configuration</button>
     </div>
-    <div class="row">
-        <span>Roll Call (WIP)</span>
+    <div id="rollCall">
+        <div class="row">
+            <span>Roll Call (WIP)</span>
+        </div>
+        <div class="inputs">
+            <div>
+                <label>Name</label>
+                <label>Staff ID</label>
+                <label>Type</label>
+            </div>
+            <div>
+                <input v-model="name"/>
+                <input v-model="staffid"/>
+                <select v-model="type">
+                    <option>MRE</option>
+                    <option>HRE</option>
+                </select>
+            </div>
+            <button @click="addEmployee">Add Employee</button>
+        </div>
+        <div id="empContainer">
+            <div v-for="emp in store.roll_call" :key="emp.name">
+                <span class="lab">{{  emp.name }}</span>
+                <span class="lab staffid">{{  emp.staffid }}</span>
+                <span class="lab">{{  emp.type }}</span>
+                <span class="del" @click="deleteEmployee(emp.id)">x</span>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -109,7 +145,7 @@ function saveConfig(){
     border-bottom: 2px solid var(--font-color-white);
     margin-top:40px;
 }
-.row:last-of-type{
+#rollCall{
     margin-bottom:100px;
 }
 .row select{
@@ -147,5 +183,45 @@ button{
     border:0;
     height:42px;
     border-radius: 5px;
+    margin-bottom:30px;
+}
+.inputs{
+    width:80vw;
+    margin:auto;
+    margin-top:20px;
+    color: var(--font-color-white);
+}
+.inputs > div{
+    display: flex;
+    justify-content: space-around;
+}
+.inputs > div > input, .inputs > div > select{
+    width:30%;
+}
+.inputs > div > label{
+    width:30%;
+    display: inline-block;
+}
+#empContainer{
+    width:80vw;
+    margin:auto;
+    color:var(--font-color-white);
+}
+#empContainer .lab{
+    width:30%;
+    display: inline-block;
+    overflow-x: scroll;
+    padding: 0 10px;
+    vertical-align: middle;
+}
+#empContainer .del{
+    width:10%;
+    display: inline-block;
+    color:var(--font-color-dark);
+    text-align: center;
+    background-color: var(--negative);
+}
+#empContainer .staffid{
+    text-align: center;
 }
 </style>

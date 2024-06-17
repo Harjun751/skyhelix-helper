@@ -5,6 +5,52 @@ import { Group, Ride, SuspensionStart, SuspensionEnd } from '@/algo'
 
 
 export const usePrefStore = defineStore('user', () => {
+  let db;
+  const request = indexedDB.open("configData", 2);
+  var rollCallStore;
+  request.onerror = (event) => {
+    console.error(event);
+  };
+  request.onsuccess = (event) => {
+    db = event.target.result;
+    const transac = db.transaction(["rollCall"], "readonly");
+    let store = transac.objectStore("rollCall")
+    const req2 = store.openCursor();
+    let arr = [];
+    req2.onsuccess = (event) =>{
+      let cursor = event.target.result;
+      if (cursor) {
+          let key = cursor.primaryKey;
+          let value = cursor.value;
+          value["id"] = key;
+          arr.push(value)
+          cursor.continue();
+      }
+      else {
+          // no more results
+          console.log(arr);
+          roll_call.value = arr;
+      }
+    }
+  };
+  request.onupgradeneeded = (event) => {
+    // Save the IDBDatabase interface
+    db = event.target.result;
+  
+    // Create an objectStore for this database
+    db.createObjectStore("seatConfig");
+    rollCallStore = db.createObjectStore("rollCall", { autoIncrement: true });
+    rollCallStore.createIndex("name", "name", {unique:false});
+    rollCallStore.createIndex("staffid", "staffid", { unique:false});
+    rollCallStore.createIndex("type", "type", { unique:false});
+    
+    db.onerror = (event) => {
+      // Generic error handler for all errors targeted at this database's
+      // requests!
+      console.error(`Database error: ${event.target.errorCode}`);
+    };
+  };
+  
   const default_option = ref("India");
   const theme = ref("blue");
   const seat_config = ref({ 
@@ -25,6 +71,7 @@ export const usePrefStore = defineStore('user', () => {
     15: 'Long',
     16: 'Short',
   })
+  const roll_call = ref({ })
 
   if (localStorage.getItem("user")) {
     let json = JSON.parse(localStorage.getItem("user"))
@@ -33,7 +80,25 @@ export const usePrefStore = defineStore('user', () => {
     seat_config.value = json.seat_config;
   }
 
-  return { default_option, theme, seat_config }
+  function addEmployee(name,staffid, type){
+    const transaction = db.transaction(["rollCall"], "readwrite");
+    const objectStore = transaction.objectStore("rollCall");
+    const request = objectStore.add({ "name":name, "staffid":staffid, "type":type});
+    request.onsuccess = () => {
+      roll_call.value.push({ "id":request.result, "name":name, "staffid":staffid, "type":type});
+    };
+  }
+
+  function deleteEmployee(id){
+    let transaction = db.transaction(["rollCall"], "readwrite");
+    let request = transaction.objectStore("rollCall").delete(id);
+    transaction.oncomplete = () => {
+      console.log("deleted!");
+      roll_call.value = roll_call.value.filter(x=>x.id!=id);
+    };
+  }
+
+  return { default_option, theme, seat_config, roll_call, addEmployee, deleteEmployee }
 })
 
 export const useQueueStore = defineStore('queue', () => {

@@ -1,6 +1,8 @@
 <script setup>
-import { useExcelStore } from '@/stores/store';
+import { useExcelStore, usePrefStore } from '@/stores/store';
 const store = useExcelStore();
+const userStore = usePrefStore();
+console.log(userStore.roll_call)
 </script>
 
 <template>
@@ -15,28 +17,36 @@ const store = useExcelStore();
             </div>
             <div class="one">
                 <span>1.</span>
-                <input class="name" type="text" v-model="store.formData.a1n"/>
+                <select class="name" v-model="store.formData.a1n">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                </select>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a1ci"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a1co"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a1b"/>
             </div>
             <div class="two">
                 <span>2.</span>
-                <input class="name" type="text" v-model="store.formData.a2n"/>
+                <select class="name" v-model="store.formData.a2n">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                </select>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a2ci"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a2co"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a2b"/>
             </div>
             <div class="three">
                 <span>3.</span>
-                <input class="name" type="text" v-model="store.formData.a3n"/>
+                <select class="name" v-model="store.formData.a3n">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                </select>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a3ci"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a3co"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a3b"/>
             </div>
             <div class="four">
                 <span>4.</span>
-                <input class="name" type="text" v-model="store.formData.a4n"/>
+                <select class="name" v-model="store.formData.a4n">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                </select>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a4ci"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a4co"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a4b"/>
@@ -46,28 +56,36 @@ const store = useExcelStore();
             <h2>MID</h2>
             <div class="one">
                 <span>1.</span>
-                <input class="name" type="text" v-model="store.formData.m1n"/>
+                <select class="name" v-model="store.formData.m1n">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                </select>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m1ci"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m1co"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m1b"/>
             </div>
             <div class="two">
                 <span>2.</span>
-                <input class="name" type="text" v-model="store.formData.m2n"/>
+                <select class="name" v-model="store.formData.m2n">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                </select>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m2ci"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m2co"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m2b"/>
             </div>
             <div class="three">
                 <span>3.</span>
-                <input class="name" type="text" v-model="store.formData.m3n"/>
+                <select class="name" v-model="store.formData.m3n">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                </select>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m3ci"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m3co"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m3b"/>
             </div>
             <div class="four">
                 <span>4.</span>
-                <input class="name" type="text" v-model="store.formData.m4n"/>
+                <select class="name" v-model="store.formData.m4n">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                </select>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m4ci"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m4co"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m4b"/>
@@ -77,28 +95,36 @@ const store = useExcelStore();
             <h2>PM</h2>
             <div class="one">
                 <span>1.</span>
-                <input class="name" type="text" v-model="store.formData.p1n"/>
+                <select class="name" v-model="store.formData.p1n">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                </select>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.p1ci"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.p1co"/>
                 <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.p1b"/>
             </div>
             <div class="two">
                 <span>2.</span>
-                <input class="name" type="text" v-model="store.formData.p2n"/>
+                <select class="name" v-model="store.formData.p2n">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                </select>
                 <input class="clock" type="text" v-model="store.formData.p2ci"/>
                 <input class="clock" type="text" v-model="store.formData.p2co"/>
                 <input class="clock" type="text" v-model="store.formData.p2b"/>
             </div>
             <div class="three">
                 <span>3.</span>
-                <input class="name" type="text" v-model="store.formData.p3n"/>
+                <select class="name" v-model="store.formData.p3n">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                </select>
                 <input class="clock" type="text" v-model="store.formData.p3ci"/>
                 <input class="clock" type="text" v-model="store.formData.p3co"/>
                 <input class="clock" type="text" v-model="store.formData.p3b"/>
             </div>
             <div class="four">
                 <span>4.</span>
-                <input class="name" type="text" v-model="store.formData.p4n"/>
+                <select class="name" v-model="store.formData.p4n">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                </select>
                 <input class="clock" type="text" v-model="store.formData.p4ci"/>
                 <input class="clock" type="text" v-model="store.formData.p4co"/>
                 <input class="clock" type="text" v-model="store.formData.p4b"/>

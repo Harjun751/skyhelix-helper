@@ -182,7 +182,6 @@ function get_seat_variations(group, seats){
         }
         if (short_count>0){
             // penalize short seatbelts
-            console.log(short_count + " many short!")
             score -= short_count;
         }
         if (partitions_count<=best_partitions_count){
