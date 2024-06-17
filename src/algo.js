@@ -178,7 +178,7 @@ function get_seat_variations(group, seats){
         }
         if (poles_count>0){
             // penalize using the poled seats
-            score -= poles_count;
+            score -= poles_count*0.5;
         }
         if (short_count>0){
             // penalize short seatbelts
