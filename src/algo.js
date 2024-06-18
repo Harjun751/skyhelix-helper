@@ -178,7 +178,7 @@ function get_seat_variations(group, seats){
         }
         if (poles_count>0){
             // penalize using the poled seats
-            score -= poles_count;
+            score -= poles_count * 0.5;
         }
         if (short_count>0){
             // penalize short seatbelts
@@ -341,6 +341,88 @@ export function brute_force_seats(queue){
     let bestseats = iterative_bruteforce(perfect_score, heap);
     allocate_seats(bestseats, groups)
     return [bestseats, groups];
+}
+
+function get_groups_and_filter(seats,queue){
+    let free_seats_num = 0;
+    let next_groups = []
+    for (let i = 0; i < seats.length; i++){
+        let seat = seats[i];
+        if (!seat.occupied){
+            free_seats_num+=1;
+        } else {
+            // check this
+            queue = queue.filter(x => x.id != seat.groupid);
+        }
+    }
+
+    for (let x = 0; x < queue.length; x++){
+        let group_size = queue[x].size
+        if (free_seats_num - group_size >= 0){
+            next_groups.push(queue[x])
+            free_seats_num -= group_size
+        }
+    }
+    return next_groups;
+}
+
+function cloneSeats(seatsToClone){
+    const config = usePrefStore().seat_config;
+    let seats = []
+    let previous = null;
+    for (let i = 1; i < 17; i++){
+
+        let isLong = false;
+        let isShort = false;
+        if (config[i] == "Long"){
+            isLong = true;
+        } else if (config[i] == "Short"){
+            isShort = true;
+        }
+        let hasPartition = false;
+        if (i==4 || i==8 || i==12 || i == 16){
+            hasPartition = true
+        }
+        let hasPole = false;
+        if (i==5 || i == 16){
+            hasPole = true;
+        }
+        let seat = new Seat(i, null, false, isLong, hasPartition, hasPole, isShort)
+        if (previous!=null){
+            previous.next = seat;
+        }
+        if (seatsToClone[i-1].occupied){
+            seat.groupid = seatsToClone[i-1].groupid;
+            seat.occupant = seatsToClone[i-1].occupant;
+            seat.occupied = true;
+        }
+        if (config[i] == "broken"){
+            seat.groupid = -10;
+            seat.occupied = true;
+        }
+        seats.push(seat)
+        previous = seat;
+    }
+    seats[15].next = seats[0];
+    return seats;
+}
+
+export function update_seats(seats, queue){
+    let should_reshuffle = false;
+    seats = cloneSeats(seats);
+    let next_groups = get_groups_and_filter(seats, queue);
+    if (next_groups==0){
+        return [seats, queue];
+    }
+    let heap = new MaxHeap();
+    heap.insert([seats, 0, next_groups]);
+    let bestseats = iterative_bruteforce(1000000000, heap);
+    if (bestseats==null){
+        should_reshuffle = true;
+        return [seats,queue, should_reshuffle]
+    }
+    allocate_seats(bestseats, queue)
+    return [bestseats, queue, should_reshuffle];
 }
 
 function allocate_seats(seats, groups){

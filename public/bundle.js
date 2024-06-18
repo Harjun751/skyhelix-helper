@@ -64,7 +64,8 @@ function formatTime(time){
 const ExcelJS = require('exceljs');
 const minHeight = 5;
 
-module.exports = async function generateSpreadsheet(rides, total_pax, breakdown, file_data, imgBuffer, formData){
+module.exports = async function generateSpreadsheet(rides, total_pax, breakdown, file_data, imgBuffer, formData, empData){
+    let date = new Date();
     const template = new ExcelJS.Workbook();
     const workbook = new ExcelJS.Workbook();
 
@@ -81,56 +82,105 @@ module.exports = async function generateSpreadsheet(rides, total_pax, breakdown,
     // daily report data
     let daily_report = workbook.getWorksheet("Daily Report");
     daily_report.addImage(logo, 'Y1:AJ7');
-    daily_report.getCell("F16").value = formData.a1n;
-    daily_report.getCell("AE16").value = formData.a1ci;
-    daily_report.getCell("AI16").value = formData.a1co;
-    daily_report.getCell("AM16").value = formData.a1b;
-    daily_report.getCell("F17").value = formData.a2n;
-    daily_report.getCell("AE17").value = formData.a2ci;
-    daily_report.getCell("AI17").value = formData.a2co;
-    daily_report.getCell("AM17").value = formData.a2b;
-    daily_report.getCell("F18").value = formData.a3n;
-    daily_report.getCell("AE18").value = formData.a3ci;
-    daily_report.getCell("AI18").value = formData.a3co;
-    daily_report.getCell("AM18").value = formData.a3b;
-    daily_report.getCell("F19").value = formData.a4n;
-    daily_report.getCell("AE19").value = formData.a4ci;
-    daily_report.getCell("AI19").value = formData.a4co;
-    daily_report.getCell("AM19").value = formData.a4b;
+    daily_report.getCell("AD10").value = `${date.getDate()}/${Number(date.getMonth())+1}/${date.getFullYear()}`
+    if (formData.a1.data != null){
+        daily_report.getCell("F16").value = formData.a1.data.name;
+        daily_report.getCell("W16").value = formData.a1.data.staffid;
+        daily_report.getCell("AA16").value = "Sky 1"
+    }
+    daily_report.getCell("AE16").value = formData.a1.clockin;
+    daily_report.getCell("AI16").value = formData.a1.clockout;
+    daily_report.getCell("AM16").value = formData.a1.break;
+    if (formData.a2.data != null){
+        daily_report.getCell("F17").value = formData.a2.data.name;
+        daily_report.getCell("W17").value = formData.a2.data.staffid;
+        daily_report.getCell("AA17").value = "Sky 2"
+    }
+    daily_report.getCell("AE17").value = formData.a2.clockin;
+    daily_report.getCell("AI17").value = formData.a2.clockout;
+    daily_report.getCell("AM17").value = formData.a2.break;
+    if (formData.a3.data != null){
+        daily_report.getCell("F18").value = formData.a3.data.name;
+        daily_report.getCell("W18").value = formData.a3.data.staffid;
+        daily_report.getCell("AA18").value = "Sky 3"
+    }
+    daily_report.getCell("AE18").value = formData.a3.clockin;
+    daily_report.getCell("AI18").value = formData.a3.clockout;
+    daily_report.getCell("AM18").value = formData.a3.break;
+    if (formData.a4.data != null){
+        daily_report.getCell("F19").value = formData.a4.data.name;
+        daily_report.getCell("W19").value = formData.a4.data.staffid;
+        daily_report.getCell("AA19").value = "Sky 4"
+    }
+    daily_report.getCell("AE19").value = formData.a4.clockin;
+    daily_report.getCell("AI19").value = formData.a4.clockout;
+    daily_report.getCell("AM19").value = formData.a4.break;
 
-    daily_report.getCell("F25").value = formData.m1n;
-    daily_report.getCell("AE25").value = formData.m1ci;
-    daily_report.getCell("AI25").value = formData.m1co;
-    daily_report.getCell("AM25").value = formData.m1b;
-    daily_report.getCell("F26").value = formData.m2n;
-    daily_report.getCell("AE26").value = formData.m2ci;
-    daily_report.getCell("AI26").value = formData.m2co;
-    daily_report.getCell("AM26").value = formData.m2b;
-    daily_report.getCell("F27").value = formData.m3n;
-    daily_report.getCell("AE27").value = formData.m3ci;
-    daily_report.getCell("AI27").value = formData.m3co;
-    daily_report.getCell("AM27").value = formData.m3b;
-    daily_report.getCell("F28").value = formData.m4n;
-    daily_report.getCell("AE28").value = formData.m4ci;
-    daily_report.getCell("AI28").value = formData.m4co;
-    daily_report.getCell("AM28").value = formData.m4b;
+    if (formData.m1.data != null){
+        daily_report.getCell("F25").value = formData.m1.data.name;
+        daily_report.getCell("W25").value = formData.m1.data.staffid;
+        daily_report.getCell("AA25").value = "Sky 1"
+    }
+    daily_report.getCell("AE25").value = formData.m1.clockin;
+    daily_report.getCell("AI25").value = formData.m1.clockout;
+    daily_report.getCell("AM25").value = formData.m1.break;
+    if (formData.m2.data != null){
+        daily_report.getCell("F26").value = formData.m2.data.name;
+        daily_report.getCell("W26").value = formData.m2.data.staffid;
+        daily_report.getCell("AA26").value = "Sky 2"
+    }
+    daily_report.getCell("AE26").value = formData.m2.clockin;
+    daily_report.getCell("AI26").value = formData.m2.clockout;
+    daily_report.getCell("AM26").value = formData.m2.break;
+    if (formData.m3.data != null){
+        daily_report.getCell("F27").value = formData.m3.data.name;
+        daily_report.getCell("W27").value = formData.m3.data.staffid;
+        daily_report.getCell("AA27").value = "Sky 3"
+    }
+    daily_report.getCell("AE27").value = formData.m3.clockin;
+    daily_report.getCell("AI27").value = formData.m3.clockout;
+    daily_report.getCell("AM27").value = formData.m3.break;
+    if (formData.m4.data != null){
+        daily_report.getCell("F28").value = formData.m4.data.name;
+        daily_report.getCell("W28").value = formData.m4.data.staffid;
+        daily_report.getCell("AA28").value = "Sky 4"
+    }
+    daily_report.getCell("AE28").value = formData.m4.clockin;
+    daily_report.getCell("AI28").value = formData.m4.clockout;
+    daily_report.getCell("AM28").value = formData.m4.break;
 
-    daily_report.getCell("F34").value = formData.p1n;
-    daily_report.getCell("AE34").value = formData.p1ci;
-    daily_report.getCell("AI34").value = formData.p1co;
-    daily_report.getCell("AM34").value = formData.p1b;
-    daily_report.getCell("F35").value = formData.p2n;
-    daily_report.getCell("AE35").value = formData.p2ci;
-    daily_report.getCell("AI35").value = formData.p2co;
-    daily_report.getCell("AM35").value = formData.p2b;
-    daily_report.getCell("F36").value = formData.p3n;
-    daily_report.getCell("AE36").value = formData.p3ci;
-    daily_report.getCell("AI36").value = formData.p3co;
-    daily_report.getCell("AM36").value = formData.p3b;
-    daily_report.getCell("F37").value = formData.p4n;
-    daily_report.getCell("AE37").value = formData.p4ci;
-    daily_report.getCell("AI37").value = formData.p4co;
-    daily_report.getCell("AM37").value = formData.p4b;
+    if (formData.p1.data != null){
+        daily_report.getCell("F34").value = formData.p1.data.name;
+        daily_report.getCell("W34").value = formData.p1.data.staffid;
+        daily_report.getCell("AA34").value = "Sky 1"
+    }
+    daily_report.getCell("AE34").value = formData.p1.clockin;
+    daily_report.getCell("AI34").value = formData.p1.clockout;
+    daily_report.getCell("AM34").value = formData.p1.break;
+    if (formData.p2.data != null){
+        daily_report.getCell("F35").value = formData.p2.data.name;
+        daily_report.getCell("W35").value = formData.p2.data.staffid;
+        daily_report.getCell("AA35").value = "Sky 2"
+    }
+    daily_report.getCell("AE35").value = formData.p2.clockin;
+    daily_report.getCell("AI35").value = formData.p2.clockout;
+    daily_report.getCell("AM35").value = formData.p2.break;
+    if (formData.p3.data != null){
+        daily_report.getCell("F36").value = formData.p3.data.name;
+        daily_report.getCell("W36").value = formData.p3.data.staffid;
+        daily_report.getCell("AA36").value = "Sky 3"
+    }
+    daily_report.getCell("AE36").value = formData.p3.clockin;
+    daily_report.getCell("AI36").value = formData.p3.clockout;
+    daily_report.getCell("AM36").value = formData.p3.break;
+    if (formData.p4.data != null){
+        daily_report.getCell("F37").value = formData.p4.data.name;
+        daily_report.getCell("W37").value = formData.p4.data.staffid;
+        daily_report.getCell("AA37").value = "Sky 4"
+    }
+    daily_report.getCell("AE37").value = formData.p4.clockin;
+    daily_report.getCell("AI37").value = formData.p4.clockout;
+    daily_report.getCell("AM37").value = formData.p4.break;
     
 
 
@@ -182,7 +232,6 @@ module.exports = async function generateSpreadsheet(rides, total_pax, breakdown,
     manifest.getCell("F3").alignment = {vertical:"middle"}
     manifest.getCell("F3").border = {top: {style:'thin'}, bottom: {style:'thin'}, left: {style:'thin'}, right:{style:'thin'}};
 
-    let date = new Date();
     manifest.getCell("G1").value = `${date.getDate()}/${Number(date.getMonth())+1}/${date.getFullYear()}`;
     manifest.getCell("G1").font = { bold:true, size:18, name: "Calibri" };
     manifest.getCell("G1").alignment = {horizontal: "center", vertical: "middle"};
@@ -429,8 +478,22 @@ module.exports = async function generateSpreadsheet(rides, total_pax, breakdown,
 
     createOuterBorder(manifest, {row:4, col: "L"}, {row:23, col: "P"})
 
-    // copyWorkSheet(template.getWorksheet("Data"), workbook, "Data"); 
-    // copyWorkSheet(template.getWorksheet("Roll Call"), workbook, "Roll Call"); 
+    copyWorkSheet(template.getWorksheet("Data"), workbook, "Data"); 
+
+
+    const roll_call = workbook.addWorksheet('Roll Call');
+    row = 3;
+    roll_call.getCell("A2").value = "S/n"
+    roll_call.getCell("B2").value = "Name of Staff"
+    roll_call.getCell("C2").value = "Staff ID"
+    roll_call.getCell("D2").value = "Type"
+    for (let x = 0; x < empData.length; x++){
+        let emp = empData[x];
+        roll_call.getCell(`B${row}`).value = emp.name;
+        roll_call.getCell(`C${row}`).value = emp.staffid;
+        roll_call.getCell(`D${row}`).value = emp.type;
+        row+=1;
+    }
 
     return workbook.xlsx.writeBuffer();
 }

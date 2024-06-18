@@ -83,6 +83,10 @@ export const usePrefStore = defineStore('user', () => {
   function addEmployee(name,staffid, type){
     const transaction = db.transaction(["rollCall"], "readwrite");
     const objectStore = transaction.objectStore("rollCall");
+    console.log(type)
+    if (type=="MRE"){
+      staffid = "NA"
+    }
     const request = objectStore.add({ "name":name, "staffid":staffid, "type":type});
     request.onsuccess = () => {
       roll_call.value.push({ "id":request.result, "name":name, "staffid":staffid, "type":type});
@@ -257,56 +261,21 @@ export const useRideStore = defineStore('ride', () => {
 
 
 export const useExcelStore = defineStore('excel', () => {
-  let formData = ref({
-    "a1n":"",
-    "a1ci":"",
-    "a1co":"",
-    "a1b":"",
-    "a2n":"",
-    "a2ci":"",
-    "a2co":"",
-    "a2b":"",
-    "a3n":"",
-    "a3ci":"",
-    "a3co":"",
-    "a3b":"",
-    "a4n":"",
-    "a4ci":"",
-    "a4co":"",
-    "a4b":"",
-    "p1n":"",
-    "p1ci":"",
-    "p1co":"",
-    "p1b":"",
-    "p2n":"",
-    "p2ci":"",
-    "p2co":"",
-    "p2b":"",
-    "p3n":"",
-    "p3ci":"",
-    "p3co":"",
-    "p3b":"",
-    "p4n":"",
-    "p4ci":"",
-    "p4co":"",
-    "p4b":"",
-    "m1n":"",
-    "m1ci":"",
-    "m1co":"",
-    "m1b":"",
-    "m2n":"",
-    "m2ci":"",
-    "m2co":"",
-    "m2b":"",
-    "m3n":"",
-    "m3ci":"",
-    "m3co":"",
-    "m3b":"",
-    "m4n":"",
-    "m4ci":"",
-    "m4co":"",
-    "m4b":"",
-  })
+  let data = {
+    "a1":{data:null, clockin: null, clockout: null, break: null},
+    "a2":{data:null, clockin: null, clockout: null, break: null},
+    "a3":{data:null, clockin: null, clockout: null, break: null},
+    "a4":{data:null, clockin: null, clockout: null, break: null},
+    "p1":{data:null, clockin: null, clockout: null, break: null},
+    "p2":{data:null, clockin: null, clockout: null, break: null},
+    "p3":{data:null, clockin: null, clockout: null, break: null},
+    "p4":{data:null, clockin: null, clockout: null, break: null},
+    "m1":{data:null, clockin: null, clockout: null, break: null},
+    "m2":{data:null, clockin: null, clockout: null, break: null},
+    "m3":{data:null, clockin: null, clockout: null, break: null},
+    "m4":{data:null, clockin: null, clockout: null, break: null},
+  }
+  let formData = ref(data);
   if (localStorage.getItem("excel")) {
     let json = JSON.parse(localStorage.getItem("excel"))
     if (json.formData!=null){
@@ -315,7 +284,7 @@ export const useExcelStore = defineStore('excel', () => {
   }
 
   function resetForm(){
-    formData.value = {};
+    formData.value = data;
   }
 
 

@@ -17,117 +17,117 @@ console.log(userStore.roll_call)
             </div>
             <div class="one">
                 <span>1.</span>
-                <select class="name" v-model="store.formData.a1n">
-                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                <select class="name" v-model="store.formData.a1.data">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp">{{ emp.name }}</option>
                 </select>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a1ci"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a1co"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a1b"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a1.clockin"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a1.clockout"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a1.break"/>
             </div>
             <div class="two">
                 <span>2.</span>
-                <select class="name" v-model="store.formData.a2n">
-                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                <select class="name" v-model="store.formData.a2.data">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp">{{ emp.name }}</option>
                 </select>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a2ci"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a2co"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a2b"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a2.clockin"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a2.clockout"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a2.break"/>
             </div>
             <div class="three">
                 <span>3.</span>
-                <select class="name" v-model="store.formData.a3n">
-                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                <select class="name" v-model="store.formData.a3.data">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp">{{ emp.name }}</option>
                 </select>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a3ci"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a3co"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a3b"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a3.clockin"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a3.clockout"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a3.break"/>
             </div>
             <div class="four">
                 <span>4.</span>
-                <select class="name" v-model="store.formData.a4n">
-                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                <select class="name" v-model="store.formData.a4.data">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp">{{ emp.name }}</option>
                 </select>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a4ci"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a4co"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a4b"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a4.clockin"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a4.clockout"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.a4.break"/>
             </div>
         </div>
         <div id="mid" class="parent">
             <h2>MID</h2>
             <div class="one">
                 <span>1.</span>
-                <select class="name" v-model="store.formData.m1n">
-                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                <select class="name" v-model="store.formData.m1.data">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp">{{ emp.name }}</option>
                 </select>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m1ci"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m1co"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m1b"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m1.clockin"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m1.clockout"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m1.break"/>
             </div>
             <div class="two">
                 <span>2.</span>
-                <select class="name" v-model="store.formData.m2n">
-                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                <select class="name" v-model="store.formData.m2.data">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp">{{ emp.name }}</option>
                 </select>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m2ci"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m2co"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m2b"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m2.clockin"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m2.clockout"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m2.break"/>
             </div>
             <div class="three">
                 <span>3.</span>
-                <select class="name" v-model="store.formData.m3n">
-                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                <select class="name" v-model="store.formData.m3.data">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp">{{ emp.name }}</option>
                 </select>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m3ci"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m3co"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m3b"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m3.clockin"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m3.clockout"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m3.break"/>
             </div>
             <div class="four">
                 <span>4.</span>
-                <select class="name" v-model="store.formData.m4n">
-                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                <select class="name" v-model="store.formData.m4.data">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp">{{ emp.name }}</option>
                 </select>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m4ci"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m4co"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m4b"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m4.clockin"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m4.clockout"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.m4.break"/>
             </div>
         </div>
         <div id="pm" class="parent">
             <h2>PM</h2>
             <div class="one">
                 <span>1.</span>
-                <select class="name" v-model="store.formData.p1n">
-                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                <select class="name" v-model="store.formData.p1.data">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp">{{ emp.name }}</option>
                 </select>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.p1ci"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.p1co"/>
-                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.p1b"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.p1.clockin"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.p1.clockout"/>
+                <input class="clock" pattern="\d+:\d{2}" type="text" v-model="store.formData.p1.break"/>
             </div>
             <div class="two">
                 <span>2.</span>
-                <select class="name" v-model="store.formData.p2n">
-                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                <select class="name" v-model="store.formData.p2.data">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp">{{ emp.name }}</option>
                 </select>
-                <input class="clock" type="text" v-model="store.formData.p2ci"/>
-                <input class="clock" type="text" v-model="store.formData.p2co"/>
-                <input class="clock" type="text" v-model="store.formData.p2b"/>
+                <input class="clock" type="text" v-model="store.formData.p2.clockin"/>
+                <input class="clock" type="text" v-model="store.formData.p2.clockout"/>
+                <input class="clock" type="text" v-model="store.formData.p2.break"/>
             </div>
             <div class="three">
                 <span>3.</span>
-                <select class="name" v-model="store.formData.p3n">
-                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                <select class="name" v-model="store.formData.p3.data">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp">{{ emp.name }}</option>
                 </select>
-                <input class="clock" type="text" v-model="store.formData.p3ci"/>
-                <input class="clock" type="text" v-model="store.formData.p3co"/>
-                <input class="clock" type="text" v-model="store.formData.p3b"/>
+                <input class="clock" type="text" v-model="store.formData.p3.clockin"/>
+                <input class="clock" type="text" v-model="store.formData.p3.clockout"/>
+                <input class="clock" type="text" v-model="store.formData.p3.break"/>
             </div>
             <div class="four">
                 <span>4.</span>
-                <select class="name" v-model="store.formData.p4n">
-                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp.name">{{ emp.name }}</option>
+                <select class="name" v-model="store.formData.p4.data">
+                    <option v-for="emp in userStore.roll_call" :key="emp.id" :value="emp">{{ emp.name }}</option>
                 </select>
-                <input class="clock" type="text" v-model="store.formData.p4ci"/>
-                <input class="clock" type="text" v-model="store.formData.p4co"/>
-                <input class="clock" type="text" v-model="store.formData.p4b"/>
+                <input class="clock" type="text" v-model="store.formData.p4.clockin"/>
+                <input class="clock" type="text" v-model="store.formData.p4.clockout"/>
+                <input class="clock" type="text" v-model="store.formData.p4.break"/>
             </div>
         </div>
     </form>
@@ -156,6 +156,7 @@ input:invalid {
 }
 .name{
     width: 45%;
+    margin-right:5px;
 }
 .clock{
     width:15%;

@@ -1,17 +1,18 @@
 <script setup>
-import { useRideStore, useExcelStore } from '@/stores/store';
+import { useRideStore, useExcelStore, usePrefStore } from '@/stores/store';
 import ReportForm from '@/components/ExcelComponents/ReportForm.vue';
 
 const store = useRideStore();
 const formStore = useExcelStore();
+const userStore = usePrefStore();
 
 async function generateSheet() {
     // see if can refactor this
-    fetch("template.xlsx").then(res => {
+    fetch("template2.xlsx").then(res => {
         res.arrayBuffer().then(data => {
             fetch("logo.png").then(res => {
                 res.arrayBuffer().then(imgData => {
-                    let generated = window.myBundle(store.rides, store.total_pax, store.breakdown, data, imgData, formStore.formData);
+                    let generated = window.myBundle(store.rides, store.total_pax, store.breakdown, data, imgData, formStore.formData, userStore.roll_call);
                     generated.then(async (result) => {
                         const blob = new Blob([result], { type: 'application/octet-stream' })
                         let date = new Date();

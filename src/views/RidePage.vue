@@ -1,15 +1,20 @@
 <script setup>
 import RideDisplay from '@/components/RideComponents/RideDisplay.vue'
-import { brute_force_seats  } from '@/algo';
+import { brute_force_seats, update_seats  } from '@/algo';
 import { useQueueStore, useRideStore } from '@/stores/store'
 import image from "@/assets/create.png";
 import resume from "@/assets/resume.png";
 import Swal from 'sweetalert2';
-import { toRef, watch } from 'vue';
+import { toRef, watch, ref, computed } from 'vue';
 
 const store = useQueueStore();
 const rideStore = useRideStore();
 const suspension = toRef(rideStore.isSuspended);
+const should_reshuffle = ref(false);
+
+const btnMessage = computed(() => {
+    return should_reshuffle.value ? "(A better ride is available. Shuffle seats?)" : "(May shuffle guests around; better results)"
+})
 
 function formatTime(time){
     let date = new Date(time);
@@ -34,6 +39,19 @@ function generate(){
     );
     let [seats, groups] = brute_force_seats(data);
     rideStore.addRide(groups, seats);
+    should_reshuffle.value = false;
+}
+
+function update(){
+    let data = JSON.parse(
+      JSON.stringify(store.groups)
+    );
+    let latest = rideStore.rides[rideStore.rides.length-1];
+    if (latest!=null && latest.state==0){
+        let [seats, groups, reshuf] = update_seats(latest.seatplan, data);
+        should_reshuffle.value = reshuf;
+        rideStore.addRide(groups, seats);
+    }
 }
 
 function warning(){
@@ -82,7 +100,12 @@ function unSuspend(){
 }
 
 if (store.groups.length > 0 && suspension.value==null){
-    generate();
+    let latest = rideStore.rides[rideStore.rides.length-1];
+    if (latest==null || latest.state==1){
+        generate();
+    } else {
+        update();
+    }
 }
 </script>
 
@@ -111,11 +134,27 @@ if (store.groups.length > 0 && suspension.value==null){
             </div>
         </button>
         <button class="delete" @click="warning()">Delete all rides</button>
-        <button v-if="suspension==null" id="generate" class="floaty" @click="generate()">
-            <div>
-                <img :src=image />
-                <span>Generate next ride</span>
-            </div>
+        <!-- <button v-if="suspension==null" id="generate" class="floaty higher" @click="update()">
+            <table>
+                <tr class="first">
+                    <td class="imgcontainer" rowspan="2"><img :src=image /></td>
+                    <td><span>Update Ride</span></td>
+                </tr>
+                <tr class="second">
+                    <td><span class="sub">(Keeps guests in place)</span></td>
+                </tr>
+            </table>
+        </button> -->
+        <button v-if="suspension==null" id="generate" class="floaty" @click="generate()" :class="{ notice: should_reshuffle }">
+            <table>
+                <tr class="first">
+                    <td class="imgcontainer" rowspan="2"><img :src=image /></td>
+                    <td><span>Re-generate ride</span></td>
+                </tr>
+                <tr class="second">
+                    <td><span class="sub">{{ btnMessage }}</span></td>
+                </tr>
+            </table>
         </button>
     </div>
 </template>
@@ -161,18 +200,53 @@ button{
     right: 20px;
     z-index: 1;
     box-shadow: 0px 5px rgba(0,0,0, 0.25);
+    text-align: left;
 }
-.floaty > div > span {
+.floaty span{
     vertical-align: middle;
     margin-left:10px;
     font-size:23px;
+    display: inline-block;
 }
-.floaty > div > img {
+.floaty span.sub{
+    font-size:11px;
+    vertical-align: bottom;
+    color: var(--secondary-color-darker)
+}
+.floaty img {
     width:40px;
     height:40px;
     vertical-align: middle;
     position:relative;
     top:1px;
+    display: inline-block;
+}
+
+.floaty table{
+    table-layout: auto;
+    border-collapse: collapse;
+    width: 100%;
+}
+.floaty td{
+    padding: 0;
+    line-height: 0;
+}
+.floaty .first{
+    height:28px;
+}
+.floaty .second{
+    height:22px;
+}
+.floaty .imgcontainer{
+    width:40px;
+}
+
+.floaty.notice{
+    color: var(--negative) !important;
+}
+
+.floaty.higher{
+    bottom:170px;
 }
 
 #iBtn{
