@@ -344,22 +344,41 @@ export function brute_force_seats(queue){
 }
 
 function get_groups_and_filter(seats,queue){
+    let queClone = structuredClone(queue);
     let free_seats_num = 0;
-    let next_groups = []
+    let next_groups = [];
+    let previous_group = -2000;
     for (let i = 0; i < seats.length; i++){
         let seat = seats[i];
+        while (seat.groupid==previous_group){
+            // skip to next fresh group
+            i+=1;
+            seat = seats[i];
+        }
         if (!seat.occupied){
             free_seats_num+=1;
+            previous_group=-2000;
         } else {
-            // check this
-            queue = queue.filter(x => x.id != seat.groupid);
+            // Check if seatmap contains deleted groups
+            let index = queClone.findIndex(x => x.id==seat.groupid);
+            if (index == -1){
+                // Set seat to unoccupied
+                seat.groupid = -1;
+                seat.occupied = false;
+                seat.occupant = '';
+                previous_group=-2000;
+            } else {
+                // if group is in queue of seatmap, remove group from seatmap
+                queClone.splice(index, 1);
+                previous_group = seat.groupid;
+            }
         }
     }
 
-    for (let x = 0; x < queue.length; x++){
-        let group_size = queue[x].size
+    for (let x = 0; x < queClone.length; x++){
+        let group_size = queClone[x].size
         if (free_seats_num - group_size >= 0){
-            next_groups.push(queue[x])
+            next_groups.push(queClone[x])
             free_seats_num -= group_size
         }
     }
@@ -411,7 +430,7 @@ export function update_seats(seats, queue){
     let should_reshuffle = false;
     seats = cloneSeats(seats);
     let next_groups = get_groups_and_filter(seats, queue);
-    if (next_groups==0){
+    if (next_groups.length==0){
         return [seats, queue];
     }
     let heap = new MaxHeap();

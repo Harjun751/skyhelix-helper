@@ -140,7 +140,7 @@ export const useQueueStore = defineStore('queue', () => {
       num_in_queue.value -= groups.value[n].size;
       groups.value.splice(n, 1);
     }
-  }
+}
 
   return { groups, addGroup, updateGroup, deleteGroup, id, num_in_queue }
 })
