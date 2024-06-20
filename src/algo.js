@@ -1,3 +1,5 @@
+import { usePrefStore } from "./stores/store";
+
 export class Group {
     constructor(plus_size, normal, kids, nationality, id){
         this.plus_size = plus_size;
@@ -44,7 +46,7 @@ export class SuspensionEnd{
     }
 }
 
-
+// Gets the groups that will be going into the next ride
 function get_groups(queue){
     let avail_seats = 16
     let next_groups = []
@@ -64,8 +66,8 @@ function get_groups(queue){
 }
 
 const evenSets = [[1,2], [3,4], [5,6], [7,8], [9,10], [11,12], [13,14], [15,16]];
-
-function get_seat_variations(group, seats){
+// Gets all possible variations of a group in a given seat set
+function get_seat_variations(group, seats, reference){
     let start = seats[0];
     let end = start;
     let occupied_count = 0;
@@ -74,6 +76,7 @@ function get_seat_variations(group, seats){
     let best_partitions_count = 0;
     let poles_count = 0;
     let short_count = 0;
+    let update_group_same_count = 0;
 
     if (group.size <= 4){
         best_partitions_count = 0;
@@ -98,66 +101,50 @@ function get_seat_variations(group, seats){
         short_count+=1;
     }
     for (let i = 0; i < group.size - 1; i++){
-        if (end.hasPartition){
-            partitions_count+=1;
-        }
-        end = end.next;
-        if (end.long){
-            long_count+=1;
-        }
-        if (end.occupied){
-            occupied_count+=1;
-        }
-        if (end.hasPole){
-            poles_count += 1;
-        }
-        if (end.isShort){
-            short_count+=1;
-        }
+        let res = step_crawler(end, group.id, reference);
+        end = res.crawler;
+        partitions_count += res.partition;
+        long_count += res.end_longs;
+        update_group_same_count += res.end_same_group;
+        occupied_count += res.end_occupied;
+        poles_count += res.end_poles;
+        short_count += res.end_short;
     }
     let variations = [];
     while (start.number!=16){
         // get to an un-occupied slot
         while (occupied_count>0){
             // crawl forward by 1, maintaining all counters
-            if (start.occupied){
-                occupied_count-=1;
-            }
-            if (start.hasPartition){
-                partitions_count-=1;
-            }
-            if (start.long){
-                long_count-=1;
-            }
-            if (start.hasPole){
-                poles_count-=1;
-            }
-            if (start.isShort){
-                short_count-=1;
-            }
+            let resStart = step_crawler(start, group.id, reference);
+            start = resStart.crawler;
+            partitions_count -= resStart.partition;
+            long_count -= resStart.start_longs;
+            update_group_same_count -= resStart.start_same_group;
+            occupied_count -= resStart.start_occupied;
+            poles_count -= resStart.start_poles;
+            short_count -= resStart.start_short;
             if (start.number==16){
                 return variations;
             }
-            start = start.next;
-            if (end.hasPartition){
-                partitions_count+=1;
-            }
-            end = end.next;
-            if (end.long){
-                long_count+=1;
-            }
-            if (end.occupied){
-                occupied_count+=1;
-            }
-            if (end.hasPole){
-                poles_count+=1;
-            }
-            if (end.isShort){
-                short_count+=1;
-            }
+            let resEnd = step_crawler(end, group.id, reference);
+            end = resEnd.crawler;
+            partitions_count += resEnd.partition;
+            long_count += resEnd.end_longs;
+            update_group_same_count += resEnd.end_same_group;
+            occupied_count += resEnd.end_occupied;
+            poles_count += resEnd.end_poles;
+            short_count += resEnd.end_short;
         }
 
         let new_seats = structuredClone(seats);
+        for (let i = 0; i < 16; i++){
+            let seat = new_seats[i];
+            if (seat.groupid==group.id){
+                seat.occupied = false;
+                seat.occupant = '';
+                seat.groupid = -1;
+            }
+        }
         let crawler = new_seats[start.number - 1];
         for (let i = 0; i < group.size; i++){
             crawler.occupied = true;
@@ -191,6 +178,7 @@ function get_seat_variations(group, seats){
             // penalize partitions heavier if group size is lower
             score -= (16-group.size)
         }
+        score += (update_group_same_count*100);
         if (group.size==2){
             let set = [start.number, end.number];
             if (evenSets.findIndex(x=> x[0]==set[0] && x[1]==set[1]) == -1){
@@ -203,44 +191,113 @@ function get_seat_variations(group, seats){
         if (start.number==16){
             break;
         }
-
-        // crawl forward by 1
-        if (start.occupied){
-            occupied_count-=1;
-        }
-        if (start.hasPartition){
-            partitions_count-=1;
-        }
-        if (start.long){
-            long_count-=1;
-        }
-        if (start.hasPole){
-            poles_count-=1;
-        }
-        if (start.isShort){
-            short_count-=1;
-        }
-        start = start.next;
-        if (end.hasPartition){
-            partitions_count+=1;
-        }
-        end = end.next;
-        if (end.long){
-            long_count+=1;
-        }
-        if (end.occupied){
-            occupied_count+=1;
-        }
-        if (end.hasPole){
-            poles_count+=1;
-        }
-        if (end.isShort){
-            short_count+=1;
-        }
+        // crawl forward by 1, maintaining all counters
+        let resStart = step_crawler(start, group.id, reference);
+        start = resStart.crawler;
+        partitions_count -= resStart.partition;
+        long_count -= resStart.start_longs;
+        update_group_same_count -= resStart.start_same_group;
+        occupied_count -= resStart.start_occupied;
+        poles_count -= resStart.start_poles;
+        short_count -= resStart.start_short;
+        
+        let resEnd = step_crawler(end, group.id, reference);
+        end = resEnd.crawler;
+        partitions_count += resEnd.partition;
+        long_count += resEnd.end_longs;
+        update_group_same_count += resEnd.end_same_group;
+        occupied_count += resEnd.end_occupied;
+        poles_count += resEnd.end_poles;
+        short_count += resEnd.end_short;
     }
     return variations;
 }
-import { usePrefStore } from "./stores/store";
+
+// takes a step given a crawler, and updates according variables
+function step_crawler(crawler, gid, reference){
+    let start_long_count = 0;
+    let start_poles_count = 0;
+    let start_short_count = 0;
+    let start_occupied_count = 0;
+    let start_update_group_same_count = 0;
+
+    let partition_points = 0;
+    let long_count = 0;
+    let poles_count = 0;
+    let short_count = 0;
+    let occupied_count = 0;
+    let update_group_same_count = 0;
+
+    let start_gid;
+    if (reference!=null){
+        let start_seat_reference = reference[crawler.number-1];
+        start_gid = start_seat_reference.groupid;
+    } else { 
+        // our special UUID ;)
+        start_gid = -123123;
+    }
+
+    if (start_gid == gid){
+        start_update_group_same_count = 1;
+    }
+    if (crawler.hasPartition){
+        partition_points = 1;
+    }
+    if (crawler.long){
+        start_long_count = 1;
+    }
+    if (crawler.hasPole){
+        start_poles_count = 1;
+    }
+    if (crawler.isShort){
+        start_short_count = 1;
+    }
+    if (crawler.occupied){
+        start_occupied_count = 1;
+    }
+    crawler = crawler.next;
+
+    let end_gid;
+    if (reference!=null){
+        let end_seat_reference = reference[crawler.number-1];
+        end_gid = end_seat_reference.groupid;
+    } else { 
+        // our special UUID
+        end_gid = -123123;
+    }
+
+    if (end_gid == gid){
+        update_group_same_count = 1;
+    }
+    if (crawler.long){
+        long_count = 1;
+    }
+    if (crawler.hasPole){
+        poles_count = 1;
+    }
+    if (crawler.isShort){
+        short_count = 1;
+    }
+    if (crawler.occupied){
+        occupied_count = 1;
+    }
+    return {
+        "crawler":crawler,
+        "partition": partition_points,
+        "start_longs":start_long_count,
+        "start_poles": start_poles_count,
+        "start_short": start_short_count,
+        "start_same_group": start_update_group_same_count,
+        "start_occupied":start_occupied_count,
+        "end_longs":long_count,
+        "end_poles": poles_count,
+        "end_short": short_count,
+        "end_same_group": update_group_same_count,
+        "end_occupied":occupied_count,
+    }
+}
+
+// Creates the default configuration of seats
 function getSeats(){
     const config = usePrefStore().seat_config;
     let seats = []
@@ -277,7 +334,8 @@ function getSeats(){
     return seats;
 }
 
-function iterative_bruteforce(perfect_score, heap){
+// Brute force function to get the next whole ride
+function iterative_bruteforce(perfect_score, heap, old_ride){
     let best = 0;
     let best_seats = null;
     let i = 0;
@@ -290,7 +348,7 @@ function iterative_bruteforce(perfect_score, heap){
         if (rem_groups.length!=0){
             let next_group = rem_groups.pop();
             // calculate the next variations
-            let next_vars = get_seat_variations(next_group, seats.slice());
+            let next_vars = get_seat_variations(next_group, seats.slice(), old_ride);
             next_vars.map(x=> {x.push(rem_groups.slice()); x[1]=x[1]+score})
             // insert the variations into the heap
             next_vars.forEach(x => heap.insert(x));
@@ -316,6 +374,7 @@ function iterative_bruteforce(perfect_score, heap){
     return best_seats;
 }
 
+// Gets the best score for early termination
 function calculate_best_case(groups){
     let perfect_score = 0;
     for (let x = 0; x < groups.length; x++){
@@ -331,119 +390,21 @@ function calculate_best_case(groups){
     return perfect_score;
 }
 
-export function brute_force_seats(queue){
+// Public-facing function which handles everything to generate a new ride
+// providing old_seats will make the algo prioritize keeping guests at their old seats
+export function brute_force_seats(queue, old_seats){
     let seats = getSeats();
     let next_groups = get_groups(queue)[0];
     let groups = structuredClone(next_groups);
     let perfect_score = calculate_best_case(groups);
     let heap = new MaxHeap();
     heap.insert([seats, 0, next_groups]);
-    let bestseats = iterative_bruteforce(perfect_score, heap);
+    let bestseats = iterative_bruteforce(perfect_score, heap, old_seats);
     allocate_seats(bestseats, groups)
     return [bestseats, groups];
 }
 
-function get_groups_and_filter(seats,queue){
-    let queClone = structuredClone(queue);
-    let free_seats_num = 0;
-    let next_groups = [];
-    let previous_group = -2000;
-    for (let i = 0; i < seats.length; i++){
-        let seat = seats[i];
-        while (seat.groupid==previous_group){
-            // skip to next fresh group
-            i+=1;
-            seat = seats[i];
-        }
-        if (!seat.occupied){
-            free_seats_num+=1;
-            previous_group=-2000;
-        } else {
-            // Check if seatmap contains deleted groups
-            let index = queClone.findIndex(x => x.id==seat.groupid);
-            if (index == -1){
-                // Set seat to unoccupied
-                seat.groupid = -1;
-                seat.occupied = false;
-                seat.occupant = '';
-                previous_group=-2000;
-            } else {
-                // if group is in queue of seatmap, remove group from seatmap
-                queClone.splice(index, 1);
-                previous_group = seat.groupid;
-            }
-        }
-    }
-
-    for (let x = 0; x < queClone.length; x++){
-        let group_size = queClone[x].size
-        if (free_seats_num - group_size >= 0){
-            next_groups.push(queClone[x])
-            free_seats_num -= group_size
-        }
-    }
-    return next_groups;
-}
-
-function cloneSeats(seatsToClone){
-    const config = usePrefStore().seat_config;
-    let seats = []
-    let previous = null;
-    for (let i = 1; i < 17; i++){
-
-        let isLong = false;
-        let isShort = false;
-        if (config[i] == "Long"){
-            isLong = true;
-        } else if (config[i] == "Short"){
-            isShort = true;
-        }
-        let hasPartition = false;
-        if (i==4 || i==8 || i==12 || i == 16){
-            hasPartition = true
-        }
-        let hasPole = false;
-        if (i==5 || i == 16){
-            hasPole = true;
-        }
-        let seat = new Seat(i, null, false, isLong, hasPartition, hasPole, isShort)
-        if (previous!=null){
-            previous.next = seat;
-        }
-        if (seatsToClone[i-1].occupied){
-            seat.groupid = seatsToClone[i-1].groupid;
-            seat.occupant = seatsToClone[i-1].occupant;
-            seat.occupied = true;
-        }
-        if (config[i] == "broken"){
-            seat.groupid = -10;
-            seat.occupied = true;
-        }
-        seats.push(seat)
-        previous = seat;
-    }
-    seats[15].next = seats[0];
-    return seats;
-}
-
-export function update_seats(seats, queue){
-    let should_reshuffle = false;
-    seats = cloneSeats(seats);
-    let next_groups = get_groups_and_filter(seats, queue);
-    if (next_groups.length==0){
-        return [seats, queue];
-    }
-    let heap = new MaxHeap();
-    heap.insert([seats, 0, next_groups]);
-    let bestseats = iterative_bruteforce(1000000000, heap);
-    if (bestseats==null){
-        should_reshuffle = true;
-        return [seats,queue, should_reshuffle]
-    }
-    allocate_seats(bestseats, queue)
-    return [bestseats, queue, should_reshuffle];
-}
-
+// Allocation of seats within groups
 function allocate_seats(seats, groups){
     groups = structuredClone(groups);
     let crawler = seats[0];

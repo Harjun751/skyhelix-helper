@@ -10,11 +10,6 @@ import { toRef, watch, ref, computed } from 'vue';
 const store = useQueueStore();
 const rideStore = useRideStore();
 const suspension = toRef(rideStore.isSuspended);
-const should_reshuffle = ref(false);
-
-const btnMessage = computed(() => {
-    return should_reshuffle.value ? "(A better ride is available. Shuffle seats?)" : "(May shuffle guests around; better results)"
-})
 
 function formatTime(time){
     let date = new Date(time);
@@ -37,9 +32,8 @@ function generate(){
     let data = JSON.parse(
       JSON.stringify(store.groups)
     );
-    let [seats, groups] = brute_force_seats(data);
+    let [seats, groups] = brute_force_seats(data, null);
     rideStore.addRide(groups, seats);
-    should_reshuffle.value = false;
 }
 
 function update(){
@@ -48,8 +42,7 @@ function update(){
     );
     let latest = rideStore.rides[rideStore.rides.length-1];
     if (latest!=null && latest.state==0){
-        let [seats, groups, reshuf] = update_seats(latest.seatplan, data);
-        should_reshuffle.value = reshuf;
+        let [seats, groups] = brute_force_seats(data, latest.seatplan);
         rideStore.addRide(groups, seats);
     }
 }
@@ -145,14 +138,14 @@ if (store.groups.length > 0 && suspension.value==null){
                 </tr>
             </table>
         </button> -->
-        <button v-if="suspension==null" id="generate" class="floaty" @click="generate()" :class="{ notice: should_reshuffle }">
+        <button v-if="suspension==null" id="generate" class="floaty" @click="generate()">
             <table>
                 <tr class="first">
                     <td class="imgcontainer" rowspan="2"><img :src=image /></td>
                     <td><span>Re-generate ride</span></td>
                 </tr>
                 <tr class="second">
-                    <td><span class="sub">{{ btnMessage }}</span></td>
+                    <td><span class="sub">(May shuffle guests around; better results)</span></td>
                 </tr>
             </table>
         </button>
@@ -239,10 +232,6 @@ button{
 }
 .floaty .imgcontainer{
     width:40px;
-}
-
-.floaty.notice{
-    color: var(--negative) !important;
 }
 
 .floaty.higher{
