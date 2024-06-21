@@ -1,13 +1,14 @@
 import { usePrefStore } from "./stores/store";
 
 export class Group {
-    constructor(plus_size, normal, kids, nationality, id){
+    constructor(plus_size, normal, kids, nationality, id, complementary){
         this.plus_size = plus_size;
         this.normal = normal;
         this.kids = kids;
         this.nationality = nationality;
         this.id = id;
         this.size = plus_size + normal + kids;
+        this.complementary = complementary;
     }
 }
 

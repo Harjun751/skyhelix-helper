@@ -1,6 +1,6 @@
 <script setup>
 import RideDisplay from '@/components/RideComponents/RideDisplay.vue'
-import { brute_force_seats, update_seats  } from '@/algo';
+import { brute_force_seats  } from '@/algo';
 import { useQueueStore, useRideStore } from '@/stores/store'
 import image from "@/assets/create.png";
 import resume from "@/assets/resume.png";
@@ -127,17 +127,6 @@ if (store.groups.length > 0 && suspension.value==null){
             </div>
         </button>
         <button class="delete" @click="warning()">Delete all rides</button>
-        <!-- <button v-if="suspension==null" id="generate" class="floaty higher" @click="update()">
-            <table>
-                <tr class="first">
-                    <td class="imgcontainer" rowspan="2"><img :src=image /></td>
-                    <td><span>Update Ride</span></td>
-                </tr>
-                <tr class="second">
-                    <td><span class="sub">(Keeps guests in place)</span></td>
-                </tr>
-            </table>
-        </button> -->
         <button v-if="suspension==null" id="generate" class="floaty" @click="generate()">
             <table>
                 <tr class="first">

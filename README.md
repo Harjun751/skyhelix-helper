@@ -1,11 +1,9 @@
 # TODOS
 ## Features
 ### Excel sheet
-- complimentary
-- check if OK
+- complimentary tickets - check how to show on excel
 
 ### Rides
-- Editing of the ride? < cconsider the necessity of this. Maybe an undo ride button would fare better?
 
 ### Setting page
 

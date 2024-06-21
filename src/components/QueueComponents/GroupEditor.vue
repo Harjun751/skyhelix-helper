@@ -2,13 +2,15 @@
 import { ref } from 'vue';
 import { useQueueStore } from '@/stores/store'
 
-const props = defineProps(['p', 'n', 'k', 'id', 'nationality','submit_type'])
+const props = defineProps(['p', 'n', 'k', 'id', 'complementary', 'nationality','submit_type'])
 const store = useQueueStore();
 let plus_size = ref(Number(props.p));
 let normal = ref(Number(props.n));
 let kids = ref(Number(props.k));
 let default_natl = props.nationality;
 let natl = ref(default_natl);
+let default_comple = props.complementary;
+let comple = ref(default_comple);
 </script>
 
 <template>
@@ -59,9 +61,16 @@ let natl = ref(default_natl);
                 <option>Vietnam</option>
             </select>
         </div>
+        <div class="input_group">
+            <span class="label">Complementary</span>
+            <select v-model="comple">
+                <option>No</option>
+                <option>Yes</option>
+            </select>
+        </div>
         <div class="submit" v-if="submit_type=='true'">
             <div class="btnwrapper">
-                <button id="submit" @click="store.addGroup(plus_size, normal, kids, natl);plus_size=0;normal=0;kids=0;natl=default_natl" type="submit">Add</button>
+                <button id="submit" @click="store.addGroup(plus_size, normal, kids, natl, comple);plus_size=0;normal=0;kids=0;natl=default_natl; comple='No'" type="submit">Add</button>
             </div>
         </div>
         <div class="submit" v-else>
@@ -69,7 +78,7 @@ let natl = ref(default_natl);
                 <button id="delete" @click="store.deleteGroup(id)" type="button">Delete</button>
             </div>
             <div class="btnwrapper update">
-                <button id="update" @click="store.updateGroup(plus_size, normal, kids, natl, props.id);$emit('minimize')" type="button">Update</button>
+                <button id="update" @click="store.updateGroup(plus_size, normal, kids, natl, props.id, comple);$emit('minimize')" type="button">Update</button>
             </div>
         </div>
     </div>
@@ -157,6 +166,7 @@ let natl = ref(default_natl);
 }
 .input_group > select{
     width:113.61px;
+    margin: 4px 0;
 }
 
 @keyframes shake {

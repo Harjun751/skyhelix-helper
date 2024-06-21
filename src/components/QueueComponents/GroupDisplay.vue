@@ -31,7 +31,7 @@ let editing = ref(false);
             </div>
             <div id="editor" v-else>
                 <div style="width:280px;margin:auto;" @click.stop>
-                    <GroupEditor @minimize="editing = !editing" :p=group.plus_size :n=group.normal :k=group.kids :nationality=group.nationality :id=group.id submit_type=false  />
+                    <GroupEditor @minimize="editing = !editing" :p=group.plus_size :n=group.normal :k=group.kids :nationality=group.nationality :id=group.id :complementary=group.complementary submit_type=false  />
                 </div>
             </div>
         </Transition>
@@ -77,7 +77,7 @@ let editing = ref(false);
     transition: height 0.4s;
 }
 #grouptainer.editing{
-    height:280px;
+    height:320px;
 }
 #header{
     height: 20px;

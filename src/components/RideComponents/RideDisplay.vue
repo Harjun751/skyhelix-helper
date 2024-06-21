@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { computed } from 'vue'
 import RideSeatingPlan from '@/components/RideComponents/RideSeatingPlan.vue'
+import RideEditor from '@/components/RideComponents/RideEditor.vue'
 import { useRideStore } from '@/stores/store'
 const store = useRideStore();
 
@@ -22,6 +23,7 @@ const formattedTime = computed(() => {
     }
     return "";
 })
+let rideGroups = props.ride.groups;
 </script>
 
 <template>
@@ -42,6 +44,9 @@ const formattedTime = computed(() => {
             <p>Suggested Seating Plan</p>
             <RideSeatingPlan :ride="ride" :number="props.ride.number" />
             <button v-if="props.ride.state==0" @click="store.liftoff()">Lift Off</button>
+            <div @click.stop v-else>
+                <RideEditor :groups="rideGroups" @save="(group) => store.edit_lifted_ride(props.ride, group.value)"/>
+            </div>
         </div>
     </div>
 </template>
@@ -121,5 +126,9 @@ button{
     border-radius: 5px;
     line-height: 20px;
     font-size:20px;
+}
+button.edit{
+    width:unset;
+    padding: 0 20px;
 }
 </style>

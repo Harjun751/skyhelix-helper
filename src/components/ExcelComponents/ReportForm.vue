@@ -2,7 +2,6 @@
 import { useExcelStore, usePrefStore } from '@/stores/store';
 const store = useExcelStore();
 const userStore = usePrefStore();
-console.log(userStore.roll_call)
 </script>
 
 <template>

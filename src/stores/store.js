@@ -17,43 +17,42 @@ export const usePrefStore = defineStore('user', () => {
     let store = transac.objectStore("rollCall")
     const req2 = store.openCursor();
     let arr = [];
-    req2.onsuccess = (event) =>{
+    req2.onsuccess = (event) => {
       let cursor = event.target.result;
       if (cursor) {
-          let key = cursor.primaryKey;
-          let value = cursor.value;
-          value["id"] = key;
-          arr.push(value)
-          cursor.continue();
+        let key = cursor.primaryKey;
+        let value = cursor.value;
+        value["id"] = key;
+        arr.push(value)
+        cursor.continue();
       }
       else {
-          // no more results
-          console.log(arr);
-          roll_call.value = arr;
+        // no more results
+        roll_call.value = arr;
       }
     }
   };
   request.onupgradeneeded = (event) => {
     // Save the IDBDatabase interface
     db = event.target.result;
-  
+
     // Create an objectStore for this database
     db.createObjectStore("seatConfig");
     rollCallStore = db.createObjectStore("rollCall", { autoIncrement: true });
-    rollCallStore.createIndex("name", "name", {unique:false});
-    rollCallStore.createIndex("staffid", "staffid", { unique:false});
-    rollCallStore.createIndex("type", "type", { unique:false});
-    
+    rollCallStore.createIndex("name", "name", { unique: false });
+    rollCallStore.createIndex("staffid", "staffid", { unique: false });
+    rollCallStore.createIndex("type", "type", { unique: false });
+
     db.onerror = (event) => {
       // Generic error handler for all errors targeted at this database's
       // requests!
       console.error(`Database error: ${event.target.errorCode}`);
     };
   };
-  
+
   const default_option = ref("India");
   const theme = ref("blue");
-  const seat_config = ref({ 
+  const seat_config = ref({
     1: 'Normal',
     2: 'Normal',
     3: 'Normal',
@@ -71,7 +70,7 @@ export const usePrefStore = defineStore('user', () => {
     15: 'Long',
     16: 'Short',
   })
-  const roll_call = ref({ })
+  const roll_call = ref({})
 
   if (localStorage.getItem("user")) {
     let json = JSON.parse(localStorage.getItem("user"))
@@ -80,25 +79,23 @@ export const usePrefStore = defineStore('user', () => {
     seat_config.value = json.seat_config;
   }
 
-  function addEmployee(name,staffid, type){
+  function addEmployee(name, staffid, type) {
     const transaction = db.transaction(["rollCall"], "readwrite");
     const objectStore = transaction.objectStore("rollCall");
-    console.log(type)
-    if (type=="MRE"){
+    if (type == "MRE") {
       staffid = "NA"
     }
-    const request = objectStore.add({ "name":name, "staffid":staffid, "type":type});
+    const request = objectStore.add({ "name": name, "staffid": staffid, "type": type });
     request.onsuccess = () => {
-      roll_call.value.push({ "id":request.result, "name":name, "staffid":staffid, "type":type});
+      roll_call.value.push({ "id": request.result, "name": name, "staffid": staffid, "type": type });
     };
   }
 
-  function deleteEmployee(id){
+  function deleteEmployee(id) {
     let transaction = db.transaction(["rollCall"], "readwrite");
     let request = transaction.objectStore("rollCall").delete(id);
     transaction.oncomplete = () => {
-      console.log("deleted!");
-      roll_call.value = roll_call.value.filter(x=>x.id!=id);
+      roll_call.value = roll_call.value.filter(x => x.id != id);
     };
   }
 
@@ -119,18 +116,18 @@ export const useQueueStore = defineStore('queue', () => {
     num_in_queue.value = json.num_in_queue;
   }
 
-  function addGroup(plus, normal, kids, nationality) {
-    if (plus == 0 && normal == 0 && kids == 0){
+  function addGroup(plus, normal, kids, nationality, complementary) {
+    if (plus == 0 && normal == 0 && kids == 0) {
       return;
     }
-    groups.value.push(new Group(plus, normal, kids, nationality, id.value++));
+    groups.value.push(new Group(plus, normal, kids, nationality, id.value++, complementary));
     num_in_queue.value += (plus + normal + kids);
   }
 
-  function updateGroup(plus, normal, kids,nationality, id) {
+  function updateGroup(plus, normal, kids, nationality, id, complementary) {
     let n = groups.value.findIndex(x => x.id == id);
     num_in_queue.value -= (groups.value[n].size);
-    groups.value[n] = new Group(plus, normal, kids, nationality, id);
+    groups.value[n] = new Group(plus, normal, kids, nationality, id, complementary);
     num_in_queue.value += (plus, normal, kids);
   }
 
@@ -140,7 +137,7 @@ export const useQueueStore = defineStore('queue', () => {
       num_in_queue.value -= groups.value[n].size;
       groups.value.splice(n, 1);
     }
-}
+  }
 
   return { groups, addGroup, updateGroup, deleteGroup, id, num_in_queue }
 })
@@ -163,11 +160,11 @@ export const useRideStore = defineStore('ride', () => {
     rideNum.value = json.rideNum;
     latest_liftoff.value = json.latest_liftoff;
     isSuspended.value = json.isSuspended;
-    if (json.total_pax!=null){
+    if (json.total_pax != null) {
       total_pax.value = Number(json.total_pax);
     }
     total_pax.value = json.total_pax;
-    if (json.breakdown!=null){
+    if (json.breakdown != null) {
       breakdown.value = json.breakdown;
     }
   }
@@ -178,13 +175,15 @@ export const useRideStore = defineStore('ride', () => {
     // set state to lifted-off
     ride.state = 1;
     ride.liftoff = Date.now();
+
     // cleanup queue store, remove lifted-off groups
     let groups = ride.groups;
     for (let x = 0; x < groups.length; x++) {
       let id = groups[x].id;
       let group = ride.groups[x];
-      if (breakdown.value[group.nationality] == null){
-        breakdown.value[group.nationality] = { "K": group.kids, "A": group.plus_size + group.normal}
+      // update breakdown
+      if (breakdown.value[group.nationality] == null) {
+        breakdown.value[group.nationality] = { "K": group.kids, "A": group.plus_size + group.normal }
         total_pax.value += group.kids + group.plus_size + group.normal
       } else {
         breakdown.value[group.nationality]["K"] = breakdown.value[group.nationality]["K"] + group.kids;
@@ -195,6 +194,33 @@ export const useRideStore = defineStore('ride', () => {
     }
 
     latest_liftoff.value = ride;
+  }
+
+  function edit_lifted_ride(ride, new_groups) {
+    //reset breakdown and total pax
+    let old_groups = Array.from(ride.groups);
+    for (let x = 0; x < old_groups.length; x++){
+      let group = old_groups[x];
+      breakdown.value[group.nationality]["K"] -= group.kids;
+      breakdown.value[group.nationality]["A"] -= (group.normal + group.plus_size);
+      total_pax.value -= (group.kids + group.normal + group.plus_size);
+    }
+
+    // update breakdown & total pax
+    for (let x = 0; x < new_groups.length; x++){
+      let group = new_groups[x];
+      if (breakdown.value[group.nationality] == null) {
+        breakdown.value[group.nationality] = { "K": group.kids, "A": group.plus_size + group.normal }
+        total_pax.value += group.kids + group.plus_size + group.normal
+      } else {
+        breakdown.value[group.nationality]["K"] = breakdown.value[group.nationality]["K"] + group.kids;
+        breakdown.value[group.nationality]["A"] = breakdown.value[group.nationality]["A"] + group.plus_size + group.normal;
+        total_pax.value += group.kids + group.plus_size + group.normal
+      }
+    }
+
+    // Set the rides' new groups
+    ride.groups = new_groups
   }
 
   function addRide(groups, seats) {
@@ -214,15 +240,15 @@ export const useRideStore = defineStore('ride', () => {
     rides.value = [];
     latest_liftoff.value = null;
     rideNum.value = 1;
-    breakdown.value = { };
+    breakdown.value = {};
     total_pax.value = 0;
     isSuspended.value = null;
   }
 
-  function suspendRide(){
+  function suspendRide() {
     let start = new Date();
     let suspension = new SuspensionStart(start);
-    if (rides.value[rides.value.length - 1].state == 0){
+    if (rides.value[rides.value.length - 1].state == 0) {
       rides.value.pop();
     }
     rides.value.push(suspension);
@@ -230,7 +256,7 @@ export const useRideStore = defineStore('ride', () => {
     // remove all pending rides
   }
 
-  function unSuspend(){
+  function unSuspend() {
     let end = new Date();
     let endSuspension = new SuspensionEnd(end);
     rides.value.push(endSuspension);
@@ -249,41 +275,41 @@ export const useRideStore = defineStore('ride', () => {
       let minutes = land_time.getMinutes();
       if (minutes < 10) {
         minutes = "0" + minutes;
-     
+
       }
       return String(hours) + String(minutes)
     }
     return null
   })
 
-  return { rides, liftoff, addRide, rideNum, nextLanding, deleteRides, latest_liftoff, total_pax, breakdown, suspendRide, unSuspend, isSuspended }
+  return { rides, liftoff, addRide, rideNum, nextLanding, deleteRides, latest_liftoff, total_pax, breakdown, suspendRide, unSuspend, isSuspended, edit_lifted_ride }
 })
 
 
 export const useExcelStore = defineStore('excel', () => {
   let data = {
-    "a1":{data:null, clockin: null, clockout: null, break: null},
-    "a2":{data:null, clockin: null, clockout: null, break: null},
-    "a3":{data:null, clockin: null, clockout: null, break: null},
-    "a4":{data:null, clockin: null, clockout: null, break: null},
-    "p1":{data:null, clockin: null, clockout: null, break: null},
-    "p2":{data:null, clockin: null, clockout: null, break: null},
-    "p3":{data:null, clockin: null, clockout: null, break: null},
-    "p4":{data:null, clockin: null, clockout: null, break: null},
-    "m1":{data:null, clockin: null, clockout: null, break: null},
-    "m2":{data:null, clockin: null, clockout: null, break: null},
-    "m3":{data:null, clockin: null, clockout: null, break: null},
-    "m4":{data:null, clockin: null, clockout: null, break: null},
+    "a1": { data: null, clockin: null, clockout: null, break: null },
+    "a2": { data: null, clockin: null, clockout: null, break: null },
+    "a3": { data: null, clockin: null, clockout: null, break: null },
+    "a4": { data: null, clockin: null, clockout: null, break: null },
+    "p1": { data: null, clockin: null, clockout: null, break: null },
+    "p2": { data: null, clockin: null, clockout: null, break: null },
+    "p3": { data: null, clockin: null, clockout: null, break: null },
+    "p4": { data: null, clockin: null, clockout: null, break: null },
+    "m1": { data: null, clockin: null, clockout: null, break: null },
+    "m2": { data: null, clockin: null, clockout: null, break: null },
+    "m3": { data: null, clockin: null, clockout: null, break: null },
+    "m4": { data: null, clockin: null, clockout: null, break: null },
   }
   let formData = ref(data);
   if (localStorage.getItem("excel")) {
     let json = JSON.parse(localStorage.getItem("excel"))
-    if (json.formData!=null){
+    if (json.formData != null) {
       formData.value = json.formData;
     }
   }
 
-  function resetForm(){
+  function resetForm() {
     formData.value = data;
   }
 
