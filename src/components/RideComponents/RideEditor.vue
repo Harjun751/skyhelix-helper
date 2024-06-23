@@ -89,8 +89,8 @@ function save_changes(){
                 <option>Vietnam</option>
             </select>
             <select class="comple" v-model="group.complementary" @change="changes=true">
-                <option>No</option>
-                <option>Yes</option>
+                <option :value=false>No</option>
+                <option :value=true>Yes</option>
             </select>
             <span class="del" @click="delete_group(group.id); changes=true">x</span>
         </div>

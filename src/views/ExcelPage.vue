@@ -65,7 +65,7 @@ async function generateSheet() {
     <div>
         <button id="generate" @click="generateSheet">
             <div>
-                <span>Generate Excel Sheet (WIP)</span>
+                <span>Generate Excel Sheet</span>
             </div>
         </button>
         <ReportForm/>

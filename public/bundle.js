@@ -331,10 +331,13 @@ module.exports = async function generateSpreadsheet(rides, total_pax, breakdown,
             for (let y = 0; y < ride.groups.length; y++){
                 let group = ride.groups[y];
                 if (nationalities[group.nationality] == null){
-                    nationalities[group.nationality] = { "K": group.kids, "A": group.plus_size + group.normal}
+                    nationalities[group.nationality] = { "K": group.kids, "A": group.plus_size + group.normal, "Complementary":0}
                 } else {
                     nationalities[group.nationality]["K"] = nationalities[group.nationality]["K"] + group.kids;
                     nationalities[group.nationality]["A"] = nationalities[group.nationality]["A"] + group.plus_size + group.normal;
+                }
+                if (group.complementary==true){
+                    nationalities[group.nationality]["Complementary"] = nationalities[group.nationality]["Complementary"] + group.size;
                 }
             }
     
@@ -344,6 +347,12 @@ module.exports = async function generateSpreadsheet(rides, total_pax, breakdown,
                 if (values["K"] > 0){
                     manifest.getCell(`C${row}`).value = values["K"];
                     manifest.getCell(`C${row}`).alignment = { vertical: 'middle', horizontal: 'center' };
+                }
+                if (values["Complementary"] > 0){
+                    manifest.getCell(`F${row}`).value = "Yes";
+                    manifest.getCell(`J${row}`).value = `Comple: ${values["Complementary"]}`;
+                    manifest.getCell(`J${row}`).alignment = { vertical: 'middle', horizontal: 'center' };
+                    manifest.getCell(`F${row}`).alignment = { vertical: 'middle', horizontal: 'center' };
                 }
                 manifest.getCell(`G${row}`).value = natl;
                 manifest.getCell(`G${row}`).alignment = { vertical: 'middle', horizontal: 'center' };
@@ -369,6 +378,17 @@ module.exports = async function generateSpreadsheet(rides, total_pax, breakdown,
                         type: 'containsText',
                         operator: 'containsBlanks',
                         style: {fill: {type: 'pattern', pattern: 'lightGrid', bgColor: {argb: 'FF0101'}, fgColor: {argb: "EBF1DE"}}}
+                    }
+                ]
+            })
+            manifest.addConditionalFormatting({
+                ref: `F5:F2000`,
+                rules:[
+                    {
+                        type: 'containsText',
+                        operator: 'containsText',
+                        text: 'Yes',
+                        style: {fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: '92D050'}}}
                     }
                 ]
             })

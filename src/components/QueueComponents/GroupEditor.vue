@@ -64,8 +64,8 @@ let comple = ref(default_comple);
         <div class="input_group">
             <span class="label">Complementary</span>
             <select v-model="comple">
-                <option>No</option>
-                <option>Yes</option>
+                <option :value=false>No</option>
+                <option :value=true>Yes</option>
             </select>
         </div>
         <div class="submit" v-if="submit_type=='true'">

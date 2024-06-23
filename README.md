@@ -1,8 +1,6 @@
 # TODOS
 ## Features
 ### Excel sheet
-- complimentary tickets - check how to show on excel
-
 ### Rides
 
 ### Setting page
