@@ -70,7 +70,7 @@ let comple = ref(default_comple);
         </div>
         <div class="submit" v-if="submit_type=='true'">
             <div class="btnwrapper">
-                <button id="submit" @click="store.addGroup(plus_size, normal, kids, natl, comple);plus_size=0;normal=0;kids=0;natl=default_natl; comple='No'" type="submit">Add</button>
+                <button id="submit" @click="store.addGroup(plus_size, normal, kids, natl, comple);plus_size=0;normal=0;kids=0;natl=default_natl; comple=false" type="submit">Add</button>
             </div>
         </div>
         <div class="submit" v-else>
